@@ -260,13 +260,28 @@ t("doctor: valida los contratos del proyecto e ignora el ejemplo de la skill", (
   eq(run(["--dir", d, "doctor", "--offline"]).code, 1);
 });
 t("doctor: avisa cuando el repo tiene una versión más nueva, y cuando está al día", () => {
-  const d = proj("remote");
-  run(["--dir", d]);
+  // Copias del paquete sin .git y con .git, para no depender de cómo se obtuvo este repo.
+  const pkgCopy = (name, git) => {
+    const c = path.join(TMP, name);
+    fs.cpSync(ROOT, c, { recursive: true, filter: (s) => !s.includes(`${path.sep}.git`) });
+    if (git) fs.mkdirSync(path.join(c, ".git"));
+    return path.join(c, "install.mjs");
+  };
+  const from = (inst, args, env = {}) => spawnSync(process.execPath, [inst, ...args], { encoding: "utf8", env: { ...baseEnv(), HOME, USERPROFILE: HOME, BCDD_REPO: "", ...env } });
   const newer = path.join(TMP, "remote-new.json"), same = path.join(TMP, "remote-same.json");
   fs.writeFileSync(newer, JSON.stringify({ version: "9.9.9" }));
   fs.writeFileSync(same, JSON.stringify({ version: VERSION }));
-  const a = run(["--dir", d, "doctor"], { BCDD_UPDATE_URL: pathToFileURL(newer).href });
-  yes(/versión nueva: 9\.9\.9/.test(a.out) && /curl -fsSL/.test(a.out) && /irm /.test(a.out), a.out);
+  const plain = pkgCopy("pkg-plain", false), clone = pkgCopy("pkg-clone", true);
+  const dp = proj("remote-plain"), dc = proj("remote-clone");
+  from(plain, ["--dir", dp]); from(clone, ["--dir", dc]);
+  const p = from(plain, ["--dir", dp, "doctor"], { BCDD_UPDATE_URL: pathToFileURL(newer).href });
+  const pOut = p.stdout + p.stderr;
+  yes(/versión nueva: 9\.9\.9/.test(pOut) && /curl -fsSL/.test(pOut) && /irm /.test(pOut) && !/ update/.test(pOut), pOut);
+  const g = from(clone, ["--dir", dc, "doctor"], { BCDD_UPDATE_URL: pathToFileURL(newer).href });
+  const gOut = g.stdout + g.stderr;
+  yes(/versión nueva: 9\.9\.9/.test(gOut) && gOut.includes(`node "${clone}" update`) && !/curl -fsSL/.test(gOut), gOut);
+  const d = proj("remote");
+  run(["--dir", d]);
   const b = run(["--dir", d, "doctor"], { BCDD_UPDATE_URL: pathToFileURL(same).href });
   yes(/al día con el repo/.test(b.out), b.out); eq(b.code, 0);
   const c = run(["--dir", d, "doctor", "--offline"]);
