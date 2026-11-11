@@ -1,5 +1,21 @@
 # Cambios
 
+## 0.3.1 — 2026-11-11
+
+Resultado de una revisión de la documentación y de probar los comandos de instalación contra GitHub.
+
+- El instalador ya no crea `.atl/` ni `.gitignore` en proyectos que no usan gentle-ai: el registro de
+  skills se actualiza (y el doctor lo revisa) solo si el proyecto ya tiene `.atl/`.
+- Sin el aviso `DEP0190` de Node al llamar a gentle-ai.
+- `install.sh` ya no deja el `.tar.gz` descargado en la carpeta temporal.
+- Los avisos de tamaño del lint saltan donde dicen: más de 12 reglas, más de 20 requisitos activos
+  y más de 5 versiones en Cambios.
+- La prueba del aviso de versión del doctor ya no falla al correr desde un clon de git.
+- README reorganizado: índice, requisitos, todos los comandos y opciones (`check`, `help`,
+  `--offline`, `--no-pull`, `doctor --json`, `set-repo`), variables de entorno, rutas para Windows,
+  cómo generar la página para el cliente y qué archivos crea la instalación.
+- `docs/METODOLOGIA.md` y `tests/prueba-manual.md` al día con el instalador.
+
 ## 0.3.0 — 2026-11-11
 
 - Instalación en un comando: `curl … | sh` (macOS, Linux, WSL) e `irm … | iex` (Windows).

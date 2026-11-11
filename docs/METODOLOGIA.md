@@ -1,6 +1,6 @@
 # Metodología BCDD
 
-**Business Contract Driven Development** · versión 0.2
+**Business Contract Driven Development** · versión 0.3
 
 > Que el cliente, el PM y el desarrollador entiendan lo mismo antes de que el agente escriba código.
 
@@ -180,8 +180,12 @@ BCDD es la etapa previa. No reemplaza ninguna herramienta de desarrollo.
 
 Reglas de convivencia:
 
-- BCDD escribe únicamente en la carpeta del contrato.
-- Usa carpetas y nombres propios; no toca archivos gestionados por otras herramientas.
+- La skill escribe únicamente en la carpeta del contrato.
+- El instalador escribe solo en las carpetas de la skill (`.claude/skills/bcdd/`,
+  `.agents/skills/bcdd/`) y, si lo pedís, en la regla de `AGENTS.md` / `CLAUDE.md`. Si el proyecto
+  ya usa el registro de skills de gentle-ai (`.atl/`), le pide a gentle-ai que lo actualice; si no,
+  no crea nada más.
+- Usa carpetas y nombres propios; no edita archivos gestionados por otras herramientas.
 - Entrega referencias (rutas), no resúmenes, a quien construye.
 - Las reglas para construir viajan dentro del contrato, así las respeta cualquier agente aunque no
   tenga la skill cargada.

@@ -4,7 +4,7 @@ description: "Trigger: transcripción, acta, notas o chat de una reunión con el
 license: MIT
 metadata:
   author: bcdd-contributors
-  version: "0.3.0"
+  version: "0.3.1"
 ---
 
 # BCDD — Contrato de negocio

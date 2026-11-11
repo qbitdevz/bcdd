@@ -6,7 +6,10 @@ doctor. Lo que no pueden cubrir es cómo se comporta un agente real siguiendo la
 ## Preparación
 
 1. Creá una carpeta vacía, copiá adentro `tests/fixtures/reunion-1.md` y `reunion-2.md`.
-2. Instalá la skill: `node ruta/a/bcdd/install.mjs`.
+2. Instalá la skill con el comando de instalación del README, o desde un clon con Node 18+:
+   `node ruta/a/bcdd/install.mjs` (en Windows, `node ruta\a\bcdd\install.mjs`).
+   Para validar un contrato a mano en las pasadas siguientes:
+   `node .claude/skills/bcdd/scripts/lint.mjs bcdd/contrato.md` (la misma línea sirve en PowerShell).
 3. Abrí tu agente en esa carpeta.
 
 ## Pasada 1 — Iniciar
@@ -52,5 +55,6 @@ reglas, exclusiones y preguntas.
 
 ## Después de un sync
 
-Corré `gentle-ai sync` (y `gentle-shell upgrade` si aplica) y después
-`node ruta/a/bcdd/install.mjs doctor`. Anotá si la skill y la regla sobrevivieron.
+Corré `gentle-ai sync` (y `gentle-shell upgrade` si aplica) y después el doctor:
+`node ~/.bcdd/pkg/install.mjs doctor` (en PowerShell, `node $HOME\.bcdd\pkg\install.mjs doctor`;
+desde un clon, `node ruta/a/bcdd/install.mjs doctor`). Anotá si la skill y la regla sobrevivieron.

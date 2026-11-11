@@ -1,6 +1,6 @@
 {
   "name": "bcdd",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "BCDD (Business Contract Driven Development): que cliente, PM y desarrollador entiendan lo mismo antes de que el agente escriba código.",
   "keywords": ["pi-package", "agent-skills", "bcdd", "requirements", "business-rules"],
   "license": "MIT",

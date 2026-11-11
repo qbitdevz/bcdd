@@ -2,11 +2,12 @@
 // BCDD — instalador. Sin dependencias. Node 18+.
 //
 //   node install.mjs [install]     instala o actualiza la skill en el proyecto actual
-//   node install.mjs update        trae la última versión del repo y reinstala donde ya estaba
-//   node install.mjs doctor        revisa instalación, regla, contratos y versión disponible
+//   node install.mjs update        reinstala donde ya estaba (si el paquete es un clon de git, antes hace git pull)
+//   node install.mjs doctor        revisa instalación, regla, contratos y versión disponible (alias: check)
 //   node install.mjs uninstall     quita la skill y la regla; no toca contratos ni fuentes
 //   node install.mjs lint <archivo>  valida un contrato
 //   node install.mjs set-repo usuario/repo   (mantenedor) configura el repo en scripts, README y package.json
+//   node install.mjs help          muestra esta ayuda
 //
 // Opciones:
 //   --with-rule     agrega la regla BCDD a AGENTS.md / CLAUDE.md (bloque delimitado y removible)
