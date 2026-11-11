@@ -21,8 +21,13 @@ const t = (name, fn) => {
 };
 const eq = (a, b, m = "") => { if (a !== b) throw new Error(`${m} esperado ${JSON.stringify(b)}, obtuve ${JSON.stringify(a)}`); };
 const yes = (c, m) => { if (!c) throw new Error(m); };
+const baseEnv = () => {
+  // En Windows la variable puede llamarse "Path": se deja una sola, "PATH".
+  const e = Object.fromEntries(Object.entries(process.env).filter(([k]) => k.toUpperCase() !== "PATH"));
+  return { ...e, PATH: process.env.PATH };
+};
 const run = (args, env = {}) => {
-  const r = spawnSync(process.execPath, [INSTALL, ...args], { encoding: "utf8", env: { ...process.env, HOME, USERPROFILE: HOME, BCDD_REPO: "", BCDD_UPDATE_URL: "", PATH: process.env.PATH, ...env } });
+  const r = spawnSync(process.execPath, [INSTALL, ...args], { encoding: "utf8", env: { ...baseEnv(), HOME, USERPROFILE: HOME, BCDD_REPO: "", BCDD_UPDATE_URL: "", ...env } });
   return { code: r.status, out: (r.stdout ?? "") + (r.stderr ?? "") };
 };
 const proj = (name, files = {}) => {
@@ -193,6 +198,35 @@ t("install --global: instala en el home y no en el proyecto", () => {
   yes(fs.existsSync(path.join(HOME, ".claude", "skills", "bcdd", "SKILL.md")) && fs.existsSync(path.join(HOME, ".agents", "skills", "bcdd", "SKILL.md")), "no instaló en home");
   run(["--global", "uninstall"]);
   yes(!fs.existsSync(path.join(HOME, ".claude", "skills", "bcdd")), "no desinstaló");
+});
+
+// ---------- Registro de gentle-ai ----------
+// gentle-ai falso: anota cada llamada en GA_LOG y lista "bcdd".
+const gaBin = path.join(TMP, "ga-bin");
+fs.mkdirSync(gaBin);
+if (process.platform === "win32") fs.writeFileSync(path.join(gaBin, "gentle-ai.cmd"), '@echo %* >> "%GA_LOG%"\r\n@echo bcdd\r\n');
+else fs.writeFileSync(path.join(gaBin, "gentle-ai"), '#!/bin/sh\necho "$@" >> "$GA_LOG"\necho bcdd\n', { mode: 0o755 });
+const runGA = (args, log) => run(args, { PATH: gaBin + path.delimiter + process.env.PATH, GA_LOG: log });
+const gaCalls = (log) => (fs.existsSync(log) ? read(log).trim().split(/\r?\n/).map((l) => l.trim()) : []);
+t("registro: en un proyecto sin .atl/ no llama a gentle-ai ni crea archivos", () => {
+  const d = proj("ga-none"), log = path.join(TMP, "ga-none.log");
+  eq(runGA(["--dir", d], log).code, 0);
+  eq(runGA(["--dir", d, "uninstall"], log).code, 0);
+  eq(gaCalls(log).join(" | "), "", "llamadas a gentle-ai");
+  eq(fs.readdirSync(d).join(", "), "", "archivos que quedaron en el proyecto");
+  const doc = (runGA(["--dir", d], log), runGA(["--dir", d, "doctor", "--offline"], log));
+  eq(doc.code, 0, doc.out); yes(!/registro/.test(doc.out), doc.out);
+  eq(gaCalls(log).join(" | "), "", "llamadas del doctor");
+});
+t("registro: en un proyecto con .atl/ lo actualiza y el doctor lo revisa, sin avisos de Node", () => {
+  const d = proj("ga-atl"), log = path.join(TMP, "ga-atl.log");
+  fs.mkdirSync(path.join(d, ".atl"));
+  const r = runGA(["--dir", d], log);
+  eq(r.code, 0, r.out); yes(/registro de skills de gentle-ai actualizado/.test(r.out), r.out);
+  const doc = runGA(["--dir", d, "doctor", "--offline"], log);
+  eq(doc.code, 0, doc.out); yes(/bcdd figura en el registro/.test(doc.out), doc.out);
+  eq(gaCalls(log).join(" | "), "skill-registry refresh | skill-registry list", "llamadas a gentle-ai");
+  yes(!/DeprecationWarning|DEP0190/.test(r.out + doc.out), r.out + doc.out);
 });
 
 // ---------- Doctor ----------

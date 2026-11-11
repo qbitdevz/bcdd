@@ -155,9 +155,9 @@ export async function runDoctor({ base = process.cwd(), offline = false, quiet =
   if (wantRule && !anyRule) bad("La regla BCDD se había instalado y ya no está en AGENTS.md ni CLAUDE.md (¿la pisó una actualización de otra herramienta?). Reinstalá con --with-rule.");
   if (!wantRule && !anyRule && found.length) info("Sin regla en AGENTS.md (opcional): se agrega con --with-rule.");
 
-  // 3. Registro de gentle-ai
-  if (projectScoped.length) {
-    const r = spawnSync("gentle-ai", ["skill-registry", "list"], { cwd: base, encoding: "utf8", shell: process.platform === "win32" });
+  // 3. Registro de gentle-ai (solo si el proyecto lo usa: existe .atl/)
+  if (projectScoped.length && fs.existsSync(path.join(base, ".atl"))) {
+    const r = spawnSync("gentle-ai skill-registry list", { cwd: base, encoding: "utf8", shell: true });
     if (!r.error && r.status === 0) {
       if (/\bbcdd\b/.test(r.stdout)) ok("bcdd figura en el registro de skills de gentle-ai");
       else bad('bcdd no figura en el registro de gentle-ai: corré "gentle-ai skill-registry refresh".');

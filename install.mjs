@@ -133,8 +133,11 @@ function removeRule(file, rel) {
   else { fs.writeFileSync(file, out.replace(/\n/g, eol)); ok(`regla quitada de ${rel(file)}`); }
 }
 
+// Solo si el proyecto ya usa el registro de gentle-ai (.atl/): en los demás no se crea nada.
+// Se pasa como una sola cadena para que el shell resuelva gentle-ai(.exe/.cmd) sin el aviso DEP0190.
 function refreshRegistry(base) {
-  const r = spawnSync("gentle-ai", ["skill-registry", "refresh"], { cwd: base, encoding: "utf8", shell: process.platform === "win32" });
+  if (!fs.existsSync(path.join(base, ".atl"))) return;
+  const r = spawnSync("gentle-ai skill-registry refresh", { cwd: base, encoding: "utf8", shell: true });
   if (r.error || r.status !== 0) info("gentle-ai no detectado: no hay registro que actualizar.");
   else ok("registro de skills de gentle-ai actualizado");
 }
