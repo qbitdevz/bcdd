@@ -1,91 +1,147 @@
 # 📜 BCDD — Business Contract Driven Development
 
-**Que el cliente, el PM y el desarrollador entiendan lo mismo antes de que el agente escriba código.**
+[![Version](https://img.shields.io/github/v/tag/qbitdevz/bcdd?label=version&sort=semver&color=7c3aed)](https://github.com/qbitdevz/bcdd/tags)
+[![License: MIT](https://img.shields.io/github/license/qbitdevz/bcdd?color=16a34a)](LICENSE)
+[![Node.js](https://img.shields.io/badge/node-%E2%89%A518-339933?logo=node.js&logoColor=white)](https://nodejs.org)
+[![Platforms](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL%20%7C%20Windows-0284c7)](#install)
+[![Agents](https://img.shields.io/badge/agents-Claude%20Code%20%7C%20Codex%20%7C%20Pi%20%7C%20OpenCode-d97706)](#use)
+[![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-db2777)](https://agentskills.io)
+[![Dependencies](https://img.shields.io/badge/dependencies-none-64748b)](package.json)
 
-Con agentes de IA, construir dejó de ser lo lento. El cuello de botella ahora es entender qué hay que
-construir y bajo qué reglas. BCDD es una skill para agentes de código (Claude Code, Pi / gentle-shell,
-Codex, OpenCode) que toma lo que ya tenés — transcripciones de reuniones, documentos, chats, tus
-propias ideas — y mantiene **un solo archivo** por proyecto, el contrato de negocio:
+**Get the client, the PM and the developer to understand the same thing before the agent writes any code.**
 
-- 🎯 el problema, en una frase;
-- 👀 lo que el cliente va a notar;
-- 📏 **las reglas del negocio**, en lenguaje llano;
-- 🔀 un diagrama de cómo funciona;
-- 🚫 lo que queda **fuera de alcance**;
-- 📋 los requisitos y su estado;
-- 📝 qué cambió desde la reunión anterior.
+With AI agents, building is no longer the slow part. The bottleneck now is understanding what to
+build and under which rules. BCDD is a skill for coding agents (Claude Code, Pi / gentle-shell, Codex,
+OpenCode) that takes what you already have — meeting transcripts, documents, chats, your own ideas —
+and keeps **a single file** per project, the business contract:
 
-Se lee en dos minutos. Después el agente lo usa como frontera de lo que puede construir.
-La metodología completa está en [`docs/METODOLOGIA.md`](docs/METODOLOGIA.md).
+- 🎯 the problem, in one sentence;
+- 👀 what the client will notice;
+- 📏 **the business rules**, in plain language;
+- 🔀 a diagram of how it works;
+- 🚫 what is **out of scope**;
+- 📋 the requirements and their status;
+- 📝 what changed since the previous meeting.
 
-| Para quién | Qué le resuelve |
+It reads in two minutes. From then on the agent uses it as the boundary of what it may build.
+The full methodology is in [English](docs/METHODOLOGY.md) and [Spanish](docs/METODOLOGIA.md).
+
+| For | What it solves |
 |---|---|
-| 👤 **Cliente** | Confirma en dos minutos que eso es lo que necesita, sin leer documentación técnica |
-| 🧭 **PM / quien dirige** | Ve qué entra, qué no, qué cambió en cada reunión y qué falta decidir |
-| 💻 **Desarrollador** | Recupera el mapa de reglas de negocio que ya no arma escribiendo el código |
+| 👤 **Client** | Confirms in two minutes that this is what they need, without reading technical documentation |
+| 🧭 **PM / project lead** | Sees what is in, what is out, what changed in each meeting and what is still to decide |
+| 💻 **Developer** | Gets back the map of business rules that writing the code no longer gives them |
 
-> 🚧 **Estado: versión 0.3, en prueba.** El instalador y las herramientas tienen pruebas automáticas.
-> Falta validación en uso real con cada agente y del instalador de Windows. Si algo falla, abrí un
-> issue: es justo lo que hace falta saber.
+> 🚧 **Status: version 0.3, in testing.** The installer and the tools have automated tests, run on
+> Windows and Linux. Real-world validation with each agent is still pending. If something breaks,
+> open an issue: that is exactly what we need to know.
 
-<a id="indice"></a>
+> 🌐 **Language.** The contract is written in your client's language. The skill's instructions and
+> the installer's messages are in Spanish.
 
-## 📑 Índice
+<a id="how-it-works"></a>
 
-- 🚀 [Instalar](#instalar) · ⚙️ [Opciones](#opciones)
-- 💬 [Usar](#usar)
-- 🧰 [Comandos](#comandos)
+## 🔀 How it works
+
+```mermaid
+flowchart TD
+    subgraph CAPTURE["📥 Capture"]
+        A(["📝 Meeting, document<br/>or new idea"])
+        B["🤖 The agent reads<br/>all the material"]
+    end
+    subgraph AGREE["🤝 Agree"]
+        C["📜 Proposes or updates<br/>the contract"]
+        D["🔍 Shows what changed<br/>and what is still open"]
+        E["📤 The summary is shared<br/>with the client"]
+        F{"✅ Approved?"}
+    end
+    subgraph BUILD["🛠️ Build"]
+        G(["🔒 Contract approved"])
+        H["🧑‍💻 The agent builds<br/>inside that boundary"]
+        I(["🚀 Demo or delivery"])
+    end
+
+    A --> B --> C --> D --> E --> F
+    F -->|"✏️ Changes requested"| C
+    F -->|"👍 Yes"| G --> H --> I
+    I -.->|"🔁 Next meeting"| A
+
+    classDef input fill:#e0f2fe,stroke:#0284c7,stroke-width:2px,color:#0c4a6e
+    classDef agent fill:#ede9fe,stroke:#7c3aed,stroke-width:2px,color:#3b0764
+    classDef client fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#78350f
+    classDef decision fill:#fce7f3,stroke:#db2777,stroke-width:2px,color:#831843
+    classDef done fill:#dcfce7,stroke:#16a34a,stroke-width:2px,color:#14532d
+    class A input
+    class B,C,D,H agent
+    class E client
+    class F decision
+    class G,I done
+    style CAPTURE fill:transparent,stroke:#0284c7,stroke-dasharray:5 4
+    style AGREE fill:transparent,stroke:#d97706,stroke-dasharray:5 4
+    style BUILD fill:transparent,stroke:#16a34a,stroke-dasharray:5 4
+```
+
+<a id="contents"></a>
+
+## 📑 Contents
+
+- 🔀 [How it works](#how-it-works)
+- 🚀 [Install](#install) · ⚙️ [Options](#options)
+- 💬 [Use](#use)
+- 🧰 [Commands](#commands)
 - 🩺 [Doctor](#doctor)
-- 🔄 [Actualizar](#actualizar)
-- ✅ [Validar un contrato](#validar)
-- 📄 [Página para el cliente](#pagina-cliente)
-- 🗑️ [Desinstalar](#desinstalar)
-- 📂 [Qué archivos crea](#archivos)
-- 🔧 [Variables de entorno](#variables)
-- 🤝 [Cómo convive con ODD, gentle-ai y Engram](#convivencia)
-- 🗂️ [Contenido del repo](#contenido)
-- 🙌 [Contribuir](#contribuir)
+- 🔄 [Update](#update)
+- ✅ [Validate a contract](#validate)
+- 📄 [Client page](#client-page)
+- 🗑️ [Uninstall](#uninstall)
+- 📂 [Files it creates](#files)
+- 🔧 [Environment variables](#variables)
+- 🤝 [How it works with ODD, gentle-ai and Engram](#coexistence)
+- 🗂️ [Repository layout](#layout)
+- 🙌 [Contributing](#contributing)
 
-<a id="instalar"></a>
+<a id="install"></a>
 
-## 🚀 Instalar
+## 🚀 Install
 
-Un comando, desde la raíz de tu proyecto:
+One command, from the root of your project:
 
-🍎🐧 **macOS / Linux / WSL / Git Bash**
+🍎🐧 **macOS / Linux / WSL**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/qbitdevz/bcdd/main/scripts/install.sh | sh
 ```
 
-🪟 **Windows (PowerShell 5.1 o 7)**
+🪟 **Windows (PowerShell 5.1 or 7)**
 
 ```powershell
 irm https://raw.githubusercontent.com/qbitdevz/bcdd/main/scripts/install.ps1 | iex
 ```
 
-Descarga el paquete en `~/.bcdd/pkg` y copia la skill a `.claude/skills/bcdd/` y
-`.agents/skills/bcdd/` del proyecto. El detalle de lo que escribe está en
-[Qué archivos crea](#archivos).
+The `curl` command also works in Git Bash on Windows.
 
-🔁 **Volver a ejecutar el mismo comando actualiza a la última versión.**
+It downloads the package to `~/.bcdd/pkg` and copies the skill to `.claude/skills/bcdd/` and
+`.agents/skills/bcdd/` in the project. What it writes, in detail, is in
+[Files it creates](#files).
 
-**📦 Requisitos**
+🔁 **Running the same command again updates to the latest version.**
 
-| Para | Hace falta |
+**📦 Requirements**
+
+| For | You need |
 |---|---|
-| `install.sh` | `sh`, `tar` y `curl` o `wget` |
-| `install.ps1` | PowerShell 5.1 o superior (Windows 10/11 ya lo trae) |
-| Doctor, lint, página para el cliente, regla en `AGENTS.md` | Node 18 o superior (ya lo tenés si usás gentle-shell o Pi) |
+| `install.sh` | `sh`, `tar` and `curl` or `wget` |
+| `install.ps1` | PowerShell 5.1 or later (Windows 10/11 ships with it) |
+| Doctor, lint, client page, `AGENTS.md` rule | Node 18 or later (you already have it if you use gentle-shell or Pi) |
 
-Sin Node se instala igual la skill, en modo básico: solo se copia, con o sin `--global`. Cualquier
-otra opción o comando pide Node.
+Without Node the skill still installs, in basic mode: it is only copied, with or without `--global`.
+Any other option or command needs Node.
 
-<a id="opciones"></a>
+<a id="options"></a>
 
-### ⚙️ Opciones
+### ⚙️ Options
 
-Las opciones se pasan así:
+Pass options like this:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/qbitdevz/bcdd/main/scripts/install.sh | sh -s -- --with-rule
@@ -95,53 +151,53 @@ curl -fsSL https://raw.githubusercontent.com/qbitdevz/bcdd/main/scripts/install.
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/qbitdevz/bcdd/main/scripts/install.ps1))) --with-rule
 ```
 
-En PowerShell también podés usar la forma corta con la variable `BCDD_ARGS`:
+In PowerShell you can also use the short form with the `BCDD_ARGS` variable:
 
 ```powershell
 $env:BCDD_ARGS = '--with-rule'; irm https://raw.githubusercontent.com/qbitdevz/bcdd/main/scripts/install.ps1 | iex
 ```
 
-| Opción | Qué hace |
+| Option | What it does |
 |---|---|
-| `--with-rule` | Agrega 3 líneas a `AGENTS.md` (o a `CLAUDE.md`, según cuál use el proyecto) para que el agente respete el contrato aunque no invoques la skill. Van entre marcadores `bcdd`; el resto del archivo no se modifica y al desinstalar queda exactamente como estaba. Una vez agregada, las reinstalaciones la conservan. |
-| `--no-rule` | Quita esa regla. |
-| `--global` | Instala en `~/.claude/skills` y `~/.agents/skills`, para todos tus proyectos. La regla es por proyecto, así que con `--global` no se agrega. |
-| `--target claude\|agents\|both` | Elige la carpeta. Por defecto, ambas. Si usás solo OpenCode, elegí una. |
-| `--dir <ruta>` | Proyecto destino, si no es el directorio actual. |
-| `--force` | Sobrescribe una skill que modificaste a mano, guardando una copia antes. |
-| `--offline` | No consulta el repo (doctor, update). |
-| `--no-pull` | En `update`, no ejecuta `git pull`. |
+| `--with-rule` | Adds 3 lines to `AGENTS.md` (or `CLAUDE.md`, whichever the project uses) so the agent respects the contract even when you don't invoke the skill. They sit between `bcdd` markers; the rest of the file is untouched, and uninstalling leaves it exactly as it was. Once added, reinstalls keep it. |
+| `--no-rule` | Removes that rule. |
+| `--global` | Installs to `~/.claude/skills` and `~/.agents/skills`, for all your projects. The rule is per project, so `--global` does not add it. |
+| `--target claude\|agents\|both` | Picks the folder. Both by default. If you only use OpenCode, pick one. |
+| `--dir <path>` | Target project, if it is not the current directory. |
+| `--force` | Overwrites a skill you edited by hand, saving a copy first. |
+| `--offline` | Does not query the repository (doctor, update). |
+| `--no-pull` | In `update`, does not run `git pull`. |
 
-Si preferís revisar el script antes de ejecutarlo, descargalo, leelo y correlo a mano. También podés
-clonar el repo y usar `node install.mjs` directamente.
+If you'd rather review the script before running it, download it, read it and run it by hand. You
+can also clone the repository and run `node install.mjs` directly.
 
-<a id="usar"></a>
+<a id="use"></a>
 
-## 💬 Usar
+## 💬 Use
 
-| Querés… | Hacé |
+| You want to… | Do this |
 |---|---|
-| Empezar un proyecto | Pasale la transcripción o las notas e invocá la skill |
-| Sumarlo a un proyecto en curso | Pedile "adoptá BCDD en este proyecto" |
-| Incorporar una reunión nueva | Pasale la transcripción: muestra el impacto y actualiza |
-| Mandarle el resumen al cliente | Pedile "compartir con el cliente": arma el mensaje y, si querés, una [página lista para enviar o imprimir a PDF](#pagina-cliente) |
-| Registrar una aprobación | Decile quién aprobó; nunca aprueba por su cuenta |
-| Saber qué quedó afuera o qué cambió | Preguntalo; responde desde el contrato |
-| Construir | Aprobá el contrato y pedí la implementación como siempre |
+| Start a project | Give the agent the transcript or notes and invoke the skill |
+| Add it to a project in progress | Ask it to "adopt BCDD in this project" |
+| Bring in a new meeting | Give it the transcript: it shows the impact and updates the contract |
+| Send the summary to the client | Ask it to "share with the client": it drafts the message and, if you want, a [page ready to send or print to PDF](#client-page) |
+| Record an approval | Tell it who approved; it never approves on its own |
+| Know what was left out or what changed | Ask; it answers from the contract |
+| Build | Approve the contract and ask for the implementation as usual |
 
-Invocación: `/bcdd` (Claude Code, OpenCode), `/skill:bcdd` (Pi, gentle-shell), `$bcdd` (Codex).
-También se activa sola cuando le pasás material de una reunión.
+Invocation: `/bcdd` (Claude Code, OpenCode), `/skill:bcdd` (Pi, gentle-shell), `$bcdd` (Codex). It
+also activates on its own when you hand it meeting material.
 
-El contrato se guarda en `bcdd/contrato.md`; lo crea el agente, no el instalador. Tus transcripciones
-y documentos **se quedan donde están**: el contrato solo anota sus rutas. Para adaptar el formato sin
-tocar la skill, dejá tu propia `plantilla.md` junto al contrato.
+The contract is saved to `bcdd/contrato.md`; the agent creates it, not the installer. Your
+transcripts and documents **stay where they are**: the contract only records their paths. To adapt
+the format without touching the skill, put your own `plantilla.md` (template) next to the contract.
 
-<a id="comandos"></a>
+<a id="commands"></a>
 
-## 🧰 Comandos
+## 🧰 Commands
 
-Una vez instalado, el instalador queda en `~/.bcdd/pkg/install.mjs`. La ruta se escribe distinto
-según la terminal:
+Once installed, the installer lives at `~/.bcdd/pkg/install.mjs`. The path is written differently
+depending on the shell:
 
 ```bash
 # macOS / Linux / WSL / Git Bash
@@ -153,178 +209,182 @@ node ~/.bcdd/pkg/install.mjs doctor
 node $HOME\.bcdd\pkg\install.mjs doctor
 ```
 
-| Comando | Qué hace |
+| Command | What it does |
 |---|---|
-| `install` | Instala o actualiza la skill. Es el comando por defecto. |
-| `update` | Reinstala solo donde ya estaba, con las mismas opciones. Ver [Actualizar](#actualizar). |
-| `doctor` (o `check`) | Revisa la instalación sin modificar nada. |
-| `lint <contrato.md>` | Valida un contrato. |
-| `uninstall` | Quita la skill y la regla. |
-| `help` | Muestra la ayuda. |
-| `set-repo usuario/repo` | Solo para mantenedores de un fork: cambia el repo en los scripts, el README y `package.json`. |
+| `install` | Installs or updates the skill. This is the default command. |
+| `update` | Reinstalls only where it was already installed, with the same options. See [Update](#update). |
+| `doctor` (or `check`) | Checks the installation without changing anything. |
+| `lint <contract.md>` | Validates a contract. |
+| `uninstall` | Removes the skill and the rule. |
+| `help` | Shows the help. |
+| `set-repo user/repo` | For fork maintainers only: changes the repository in the scripts, the README and `package.json`. |
 
-Todos aceptan las [opciones](#opciones) que correspondan. También se pueden ejecutar con el comando
-de instalación, sin tener el paquete: `curl … | sh -s -- doctor`, o en PowerShell
+They all accept the relevant [options](#options). They can also run through the install command,
+without having the package: `curl … | sh -s -- doctor`, or in PowerShell
 `$env:BCDD_ARGS = 'doctor'; irm … | iex`.
 
 <a id="doctor"></a>
 
-## 🩺 Doctor: ¿está bien instalada y al día?
+## 🩺 Doctor: is it installed correctly and up to date?
 
 ```bash
 node ~/.bcdd/pkg/install.mjs doctor
 ```
 
-Revisa, sin modificar nada:
+Without changing anything, it checks:
 
-- que la skill esté completa y sin alteraciones (compara cada archivo contra lo instalado);
-- que la regla de `AGENTS.md` siga en su lugar y no esté dañada ni desactualizada;
-- que `bcdd` figure en el registro de skills de gentle-ai, si el proyecto lo usa (tiene `.atl/`);
-- que los contratos del proyecto sean válidos;
-- si el repo tiene una versión más nueva, y con qué comando actualizar.
+- that the skill is complete and unaltered (it compares each file against what was installed);
+- that the `AGENTS.md` rule is still in place, not damaged and not outdated;
+- that `bcdd` appears in the gentle-ai skill registry, if the project uses it (has `.atl/`);
+- that the project's contracts are valid;
+- whether the repository has a newer version, and which command updates it.
 
-Sale con código 1 si encuentra un problema. Corré el doctor después de cualquier `gentle-ai sync`,
-`gentle-shell upgrade` o actualización de tus herramientas. También podés pedírselo al agente: el
-doctor viaja dentro de la skill y funciona sin el paquete:
+It exits with code 1 when it finds a problem. Run the doctor after any `gentle-ai sync`,
+`gentle-shell upgrade` or update of your tools. You can also ask the agent to run it: the doctor
+ships inside the skill and works without the package:
 
 ```bash
-node .claude/skills/bcdd/scripts/doctor.mjs           # o .agents/skills/bcdd/...
-node .claude/skills/bcdd/scripts/doctor.mjs --json    # resultado en JSON
+node .claude/skills/bcdd/scripts/doctor.mjs           # or .agents/skills/bcdd/...
+node .claude/skills/bcdd/scripts/doctor.mjs --json    # JSON output
 ```
 
-Sin conexión (o con `--offline`), el chequeo de versión se omite y el resto funciona igual.
+Offline (or with `--offline`), the version check is skipped and everything else works the same.
 
-<a id="actualizar"></a>
+<a id="update"></a>
 
-## 🔄 Actualizar
+## 🔄 Update
 
-Lo más simple es **volver a ejecutar el comando de instalación**: descarga la última versión y
-reinstala.
+The simplest way is to **run the install command again**: it downloads the latest version and
+reinstalls.
 
 ```bash
 node ~/.bcdd/pkg/install.mjs update
 ```
 
-`update` reinstala **solo donde ya estaba** (proyecto y/o global, las mismas carpetas), conservando
-la regla si la tenías. Si el paquete es un clon de git, antes hace `git pull`. Si no lo es (el caso
-del comando de instalación), **no descarga nada**: reinstala desde `~/.bcdd/pkg` y te recuerda volver
-a ejecutar `curl`/`irm`. Si modificaste la skill a mano, no la pisa: avisa y pide `--force`.
+`update` reinstalls **only where it was already installed** (project and/or global, the same
+folders), keeping the rule if you had it. If the package is a git clone, it runs `git pull` first. If
+it is not (the case with the install command), it **downloads nothing**: it reinstalls from
+`~/.bcdd/pkg` and reminds you to run `curl`/`irm` again. If you edited the skill by hand, it does not
+overwrite it: it warns you and asks for `--force`.
 
-<a id="validar"></a>
+<a id="validate"></a>
 
-## ✅ Validar un contrato
+## ✅ Validate a contract
 
 ```bash
 node ~/.bcdd/pkg/install.mjs lint bcdd/contrato.md
-node .claude/skills/bcdd/scripts/lint.mjs bcdd/contrato.md --json   # desde la skill, en JSON
+node .claude/skills/bcdd/scripts/lint.mjs bcdd/contrato.md --json   # from the skill, as JSON
 ```
 
-Detecta reglas sin fuente, requisitos sin "Listo cuando", referencias rotas, IDs repetidos, estados
-inválidos, jerga técnica y secciones faltantes. Advierte cuando el contrato crece demasiado: más de
-12 reglas, más de 20 requisitos activos o más de 5 versiones en Cambios. Sale con código 1 si hay
-errores; las advertencias no cortan. El agente lo ejecuta solo al terminar cada pasada.
+It catches rules without a source, requirements without "Listo cuando" (done when), broken
+references, duplicate IDs, invalid statuses, technical jargon and missing sections. It warns when the
+contract grows too large: more than 12 rules, more than 20 active requirements or more than 5
+versions in Changes. It exits with code 1 on errors; warnings do not stop it. The agent runs it on its
+own at the end of each pass.
 
-<a id="pagina-cliente"></a>
+<a id="client-page"></a>
 
-## 📄 Página para el cliente
+## 📄 Client page
 
-Cuando le pedís "compartir con el cliente", el agente puede generar una página HTML lista para enviar
-o imprimir a PDF, sin rutas internas ni la sección "Para quien construye". También podés generarla
-vos:
+When you ask it to "share with the client", the agent can generate an HTML page ready to send or
+print to PDF, without internal paths or the "Para quien construye" (for whoever builds) section. You
+can also generate it yourself:
 
 ```bash
 node .claude/skills/bcdd/scripts/exportar.mjs bcdd/contrato.md
-node .claude/skills/bcdd/scripts/exportar.mjs bcdd/contrato.md --out entrega/cliente.html
+node .claude/skills/bcdd/scripts/exportar.mjs bcdd/contrato.md --out delivery/client.html
 ```
 
-Por defecto crea `contrato-cliente.html` junto al contrato. El diagrama se dibuja con Mermaid, que la
-página carga de internet; sin conexión se muestra como una lista de pasos.
+By default it creates `contrato-cliente.html` next to the contract. The diagram is drawn with
+Mermaid, which the page loads from the internet; offline it is shown as a list of steps.
 
-<a id="desinstalar"></a>
+<a id="uninstall"></a>
 
-## 🗑️ Desinstalar
+## 🗑️ Uninstall
 
 ```bash
 node ~/.bcdd/pkg/install.mjs uninstall
-node ~/.bcdd/pkg/install.mjs uninstall --global   # la instalación global
+node ~/.bcdd/pkg/install.mjs uninstall --global   # the global installation
 ```
 
-Quita la skill, las carpetas `.claude/skills` y `.agents/skills` si quedan vacías, y la regla (si
-`AGENTS.md` solo contenía la regla, lo borra). Tus contratos y tus fuentes no se tocan. Para borrar
-también el paquete descargado, eliminá `~/.bcdd`.
+It removes the skill, the `.claude/skills` and `.agents/skills` folders if they end up empty, and the
+rule (if `AGENTS.md` only contained the rule, it deletes the file). Your contracts and sources are not
+touched. To also delete the downloaded package, remove `~/.bcdd`.
 
-<a id="archivos"></a>
+<a id="files"></a>
 
-## 📂 Qué archivos crea
+## 📂 Files it creates
 
-| Dónde | Qué | Cuándo |
+| Where | What | When |
 |---|---|---|
-| `~/.bcdd/pkg/` | El paquete descargado | Comando de instalación (`curl`/`irm`) |
-| `.claude/skills/bcdd/`, `.agents/skills/bcdd/` | La skill y su `.bcdd-manifest.json` (versión y huellas de cada archivo, para el doctor) | Siempre (o en `~` con `--global`) |
-| `AGENTS.md` o `CLAUDE.md` | 3 líneas entre marcadores `bcdd` | Solo con `--with-rule` |
-| `.atl/` | Registro de skills de gentle-ai, actualizado con `gentle-ai skill-registry refresh` | Solo si el proyecto ya tiene `.atl/`; en los demás no se crea nada |
-| Temporal del sistema (`bcdd-backup-…`) | Copia de la skill que modificaste | Solo con `--force` |
-| `bcdd/contrato.md` | El contrato | Lo crea el agente al usar la skill |
+| `~/.bcdd/pkg/` | The downloaded package | Install command (`curl`/`irm`) |
+| `.claude/skills/bcdd/`, `.agents/skills/bcdd/` | The skill and its `.bcdd-manifest.json` (version and hash of each file, for the doctor) | Always (or under `~` with `--global`) |
+| `AGENTS.md` or `CLAUDE.md` | 3 lines between `bcdd` markers | Only with `--with-rule` |
+| `.atl/` | The gentle-ai skill registry, refreshed with `gentle-ai skill-registry refresh` | Only if the project already has `.atl/`; otherwise nothing is created |
+| System temp folder (`bcdd-backup-…`) | A copy of the skill you edited | Only with `--force` |
+| `bcdd/contrato.md` | The contract | Created by the agent when you use the skill |
 
 <a id="variables"></a>
 
-## 🔧 Variables de entorno
+## 🔧 Environment variables
 
-| Variable | Para qué | Por defecto |
+| Variable | Purpose | Default |
 |---|---|---|
-| `BCDD_REPO` | Repo de origen (`usuario/repo`), para un fork. También lo usa el doctor | `qbitdevz/bcdd` |
-| `BCDD_REF` | Rama o tag a descargar | `main` |
-| `BCDD_HOME` | Carpeta donde queda el paquete | `~/.bcdd` |
-| `BCDD_ARGS` | Solo PowerShell: opciones o comando para `irm … \| iex` | — |
-| `BCDD_TARBALL_URL` / `BCDD_ZIP_URL` | URL completa del `.tar.gz` (sh) o `.zip` (PowerShell), en lugar de GitHub | — |
-| `BCDD_UPDATE_URL` | URL del `package.json` contra el que el doctor compara la versión (pruebas) | el del repo |
+| `BCDD_REPO` | Source repository (`user/repo`), for a fork. The doctor uses it too | `qbitdevz/bcdd` |
+| `BCDD_REF` | Branch or tag to download | `main` |
+| `BCDD_HOME` | Folder where the package is kept | `~/.bcdd` |
+| `BCDD_ARGS` | PowerShell only: options or command for `irm … \| iex` | — |
+| `BCDD_TARBALL_URL` / `BCDD_ZIP_URL` | Full URL of the `.tar.gz` (sh) or `.zip` (PowerShell), instead of GitHub | — |
+| `BCDD_UPDATE_URL` | URL of the `package.json` the doctor compares the version against (tests) | the repository's |
 
-Por ejemplo, para instalar otra rama o un tag: `curl -fsSL … | BCDD_REF=<rama-o-tag> sh`, o en
-PowerShell `$env:BCDD_REF = '<rama-o-tag>'; irm … | iex`.
+For example, to install a specific version: `curl -fsSL … | BCDD_REF=v0.3.1 sh`, or in PowerShell
+`$env:BCDD_REF = 'v0.3.1'; irm … | iex`.
 
-<a id="convivencia"></a>
+<a id="coexistence"></a>
 
-## 🤝 Cómo convive con ODD, gentle-ai y Engram
+## 🤝 How it works with ODD, gentle-ai and Engram
 
-- **Va antes, no en lugar de.** BCDD define qué se acordó; ODD (o tu flujo) decide cómo construirlo.
-- **No duplica.** Tareas, pruebas y evidencia siguen en `odd/tasks/`. El contrato no sigue el avance.
-- **Pasa referencias, no resúmenes.** Quien construye lee el contrato y la fuente original.
-- **Las reglas para construir viajan en el contrato** (sección 7), así las respeta cualquier agente.
-- **No es obligatoria.** Bugfixes, refactors y cambios técnicos no pasan por BCDD.
-- **Memoria:** si hay Engram, guarda solo una nota con la ruta y la versión del contrato.
+- **It comes before, not instead of.** BCDD defines what was agreed; ODD (or your workflow) decides how to build it.
+- **No duplication.** Tasks, tests and evidence stay in `odd/tasks/`. The contract does not track progress.
+- **It hands over references, not summaries.** Whoever builds reads the contract and the original source.
+- **The rules for building travel inside the contract** (section 7), so any agent respects them.
+- **It is not mandatory.** Bug fixes, refactors and technical changes do not go through BCDD.
+- **Memory:** with Engram, it only saves a note with the contract's path and version.
 
-Diseñada según la documentación de gentle-ai 4.x, gentle-shell 4.x y Engram 1.x, y conforme a la
-especificación Agent Skills y a la guía de estilo de skills de gentle-shell. Funciona sin ninguna de
-esas herramientas.
+Designed following the documentation of gentle-ai 4.x, gentle-shell 4.x and Engram 1.x, and
+conforming to the Agent Skills specification and the gentle-shell skill style guide. It works without
+any of those tools.
 
-<a id="contenido"></a>
+<a id="layout"></a>
 
-## 🗂️ Contenido del repo
+## 🗂️ Repository layout
 
 ```
-skills/bcdd/SKILL.md              reglas y tabla de decisión para el agente
-skills/bcdd/references/           modos de uso y guía de redacción
-skills/bcdd/assets/               plantilla, ejemplo completo y formato del mensaje al cliente
-skills/bcdd/scripts/              lint, exportar y doctor
-snippets/agents-rule.md           la regla opcional para AGENTS.md
-docs/METODOLOGIA.md               la metodología explicada
-scripts/install.sh                instalación en un comando (macOS, Linux, WSL, Git Bash)
-scripts/install.ps1               instalación en un comando (Windows PowerShell)
+skills/bcdd/SKILL.md              rules and decision table for the agent
+skills/bcdd/references/           usage modes and writing guide
+skills/bcdd/assets/               template, full example and client message format
+skills/bcdd/scripts/              lint, exportar (client page) and doctor
+snippets/agents-rule.md           the optional rule for AGENTS.md
+docs/METHODOLOGY.md               the methodology explained (English)
+docs/METODOLOGIA.md               the methodology explained (Spanish)
+scripts/install.sh                one-command install (macOS, Linux, WSL, Git Bash)
+scripts/install.ps1               one-command install (Windows PowerShell)
 install.mjs                       install · update · doctor · lint · uninstall · help · set-repo
-tests/run.mjs                     pruebas automáticas
-tests/fixtures/                   reuniones de ejemplo y los contratos esperados
-tests/prueba-manual.md            recorrido guiado para probar la skill con un agente real
-tests/simulacion/                 proyecto simulado (modo Adoptar) y el contrato que produjo
-CHANGELOG.md                      cambios por versión
-package.json · LICENSE            metadatos del paquete y licencia MIT
+tests/run.mjs                     automated tests
+tests/fixtures/                   sample meetings and the expected contracts
+tests/prueba-manual.md            guided walkthrough to test the skill with a real agent (Spanish)
+tests/simulacion/                 simulated project (Adopt mode) and the contract it produced
+CHANGELOG.md                      changes per version
+package.json · LICENSE            package metadata and MIT license
 ```
 
-<a id="contribuir"></a>
+<a id="contributing"></a>
 
-## 🙌 Contribuir
+## 🙌 Contributing
 
-Probala en un proyecto real y contá qué pasó: qué entendió bien el agente, qué no, y si tu cliente
-entendió el contrato. [`tests/prueba-manual.md`](tests/prueba-manual.md) tiene un recorrido guiado.
+Try it on a real project and tell us what happened: what the agent understood well, what it didn't,
+and whether your client understood the contract. [`tests/prueba-manual.md`](tests/prueba-manual.md)
+has a guided walkthrough (in Spanish).
 
-Pruebas automáticas: `node tests/run.mjs` (o `npm test`). Las del comando `curl | sh` corren solo en
-macOS y Linux. Licencia MIT.
+Automated tests: `node tests/run.mjs` (or `npm test`). The `curl | sh` tests run only on macOS and
+Linux. MIT license.

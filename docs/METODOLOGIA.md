@@ -1,5 +1,7 @@
 # Metodología BCDD
 
+[English](METHODOLOGY.md) · **Español**
+
 **Business Contract Driven Development** · versión 0.3
 
 > Que el cliente, el PM y el desarrollador entiendan lo mismo antes de que el agente escriba código.
