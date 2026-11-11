@@ -25,7 +25,7 @@ jobs:
         env:
           BCDD_REF: ${{ github.sha }}
         run: |
-          set -eu
+          set -euo pipefail
           project="$(mktemp -d)"
           cd "$project"
           git init -q
@@ -38,7 +38,7 @@ jobs:
         env:
           BCDD_REF: ${{ github.sha }}
         run: |
-          set -eu
+          set -euo pipefail
           cd "$HOME"
           curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/scripts/install.sh" | sh -s -- --global
           node ~/.bcdd/pkg/install.mjs doctor
