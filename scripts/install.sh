@@ -46,6 +46,9 @@ if command -v node >/dev/null 2>&1; then
 fi
 
 if [ "$NODE_OK" -eq 1 ]; then
+  # exec reemplaza este proceso y el trap no llega a correr: se limpia antes.
+  rm -rf "$TMP"
+  trap - EXIT INT TERM
   exec node "$PKG/install.mjs" "$@"
 fi
 

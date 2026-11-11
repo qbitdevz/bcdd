@@ -262,6 +262,12 @@ if (hasSh) {
     yes(read(path.join(d, "AGENTS.md")).includes("<!-- bcdd:start"), "no pasó las opciones");
     eq(boot(d, ["doctor", "--offline"]).code, 0, "doctor por el mismo comando");
   });
+  t("curl | sh: no deja archivos temporales al pasarle el control a Node", () => {
+    const tmpdir = path.join(TMP, "sh-tmp"); fs.mkdirSync(tmpdir);
+    const r = boot(proj("boot-tmp"), [], { TMPDIR: tmpdir });
+    eq(r.code, 0, r.out);
+    eq(fs.readdirSync(tmpdir).join(", "), "", "quedó en el temporal");
+  });
   t("curl | sh: sin repo configurado o con descarga inválida, falla con mensaje claro", () => {
     const a = boot(proj("boot-norepo"), [], { BCDD_TARBALL_URL: "", BCDD_REPO: "__BCDD_REPO__" });
     eq(a.code, 1); yes(/no está configurado/.test(a.out), a.out);
