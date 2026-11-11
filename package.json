@@ -1,0 +1,14 @@
+{
+  "name": "bcdd",
+  "version": "0.3.0",
+  "description": "BCDD (Business Contract Driven Development): que cliente, PM y desarrollador entiendan lo mismo antes de que el agente escriba código.",
+  "keywords": ["pi-package", "agent-skills", "bcdd", "requirements", "business-rules"],
+  "license": "MIT",
+  "type": "module",
+  "bin": { "bcdd": "./install.mjs" },
+  "files": ["skills", "snippets", "docs", "scripts", "install.mjs", "README.md", "CHANGELOG.md", "LICENSE"],
+  "engines": { "node": ">=18" },
+  "scripts": { "test": "node tests/run.mjs" },
+  "pi": { "skills": ["./skills"] },
+  "bcdd": { "repo": "qbitdevz/bcdd", "branch": "main" }
+}

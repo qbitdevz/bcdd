@@ -1,0 +1,8 @@
+# Los scripts tienen que conservar finales de línea LF aunque el repo se clone en Windows:
+# con CRLF, "curl | sh" falla.
+* text=auto eol=lf
+*.sh text eol=lf
+*.mjs text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.ps1 text eol=lf
