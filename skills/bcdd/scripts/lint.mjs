@@ -104,7 +104,7 @@ export function lintContract(text) {
     if (empty(fuente)) E(`${id}: falta la fuente.`);
     if (/a definir|to be defined|tbd/i.test(texto ?? "") && !["a confirmar", "to confirm"].includes(norm(est))) W(`${id}: tiene un valor "a definir" pero no está "A confirmar".`);
   }
-  if (rules.length > 14) W(`Hay ${rules.length} reglas; por encima de 12 conviene agrupar o dividir por módulo.`);
+  if (rules.length > 12) W(`Hay ${rules.length} reglas; por encima de 12 conviene agrupar o dividir por módulo.`);
 
   const reqIds = new Set();
   let active = 0;
@@ -131,11 +131,11 @@ export function lintContract(text) {
   for (const r of rules) {
     if (["acordada", "agreed"].includes(norm(r[2])) && !usedRules.has(r[0])) W(`${r[0]}: regla Acordada que ningún requisito aplica.`);
   }
-  if (active > 22) W(`Hay ${active} requisitos activos; por encima de 20 conviene dividir por módulo.`);
+  if (active > 20) W(`Hay ${active} requisitos activos; por encima de 20 conviene dividir por módulo.`);
 
   const versions = (sec["5"] ?? "").match(/^### v\d+/gm) ?? [];
   if (sec["5"] && fm.version && !new RegExp(`^### v${fm.version}\\b`, "m").test(sec["5"])) E(`La sección 5 no tiene la entrada de la versión ${fm.version}.`);
-  if (versions.length > 6) W(`Cambios tiene ${versions.length} versiones; mové las más viejas a historial.md.`);
+  if (versions.length > 5) W(`Cambios tiene ${versions.length} versiones; por encima de 5 mové las más viejas a historial.md.`);
 
   const questions = (stripCode(sec["1"]).match(/\*\*P-\d+:?\*\*/g) ?? []).length;
   const prose = [sec["1"], sec["2"], sec["3"]].map(stripCode).join("\n").replace(/\|[^|\n]*$/gm, "");

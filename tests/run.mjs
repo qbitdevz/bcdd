@@ -103,6 +103,20 @@ t("lint advierte jerga técnica y criterios no comprobables", () => {
   yes(r.warnings.some((w) => /no es comprobable/.test(w)), "no advirtió el criterio vago");
 });
 
+t("lint: los avisos de tamaño saltan justo por encima de 12 reglas, 20 requisitos activos y 5 versiones", () => {
+  // El ejemplo tiene 7 reglas, 4 requisitos activos y 2 versiones.
+  const rows = (n, f) => Array.from({ length: n }, (_, i) => f(i)).join("\n");
+  const withRules = (n) => example.replace(/^(\| RN-07 .*)$/m, (l) => `${l}\n${rows(n - 7, (i) => `| RN-${20 + i} | Regla extra ${i}. | A confirmar | equipo |`)}`);
+  const withReqs = (n) => example.replace(/^(\| REQ-05 .*)$/m, (l) => `${l}\n${rows(n - 4, (i) => `| REQ-${20 + i} | Pedido extra ${i} | A confirmar | Nuevo | Se ve el dato extra ${i} | — | equipo |`)}`);
+  const withVersions = (n) => example.replace(/^### v1 /m, (l) => `${rows(n - 2, (i) => `### v${50 + i} — extra\n\n- cambio ${i}\n`)}\n${l}`);
+  const warns = (s, re) => lintContract(s).warnings.some((w) => re.test(w));
+  const R = /reglas; por encima de 12/, Q = /requisitos activos; por encima de 20/, V = /Cambios tiene \d+ versiones/;
+  yes(!warns(withRules(12), R) && warns(withRules(13), R), "reglas: 12 no avisa, 13 avisa");
+  yes(!warns(withReqs(20), Q) && warns(withReqs(21), Q), "requisitos: 20 no avisa, 21 avisa");
+  yes(!warns(withVersions(5), V) && warns(withVersions(6), V), "versiones: 5 no avisa, 6 avisa");
+  eq(lintContract(withVersions(6)).errors.join(" | "), "", "las mutaciones no tienen que generar errores");
+});
+
 // ---------- Exportar ----------
 t("exportar: genera la versión para el cliente sin rutas internas", () => {
   const out = path.join(TMP, "cliente.html");
