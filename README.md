@@ -1,6 +1,7 @@
 # 📜 BCDD — Business Contract Driven Development
 
 [![Version](https://img.shields.io/github/v/tag/qbitdevz/bcdd?label=version&sort=semver&color=7c3aed)](https://github.com/qbitdevz/bcdd/tags)
+[![macOS](https://github.com/qbitdevz/bcdd/actions/workflows/macos.yml/badge.svg)](https://github.com/qbitdevz/bcdd/actions/workflows/macos.yml)
 [![License: MIT](https://img.shields.io/github/license/qbitdevz/bcdd?color=16a34a)](LICENSE)
 [![Node.js](https://img.shields.io/badge/node-%E2%89%A518-339933?logo=node.js&logoColor=white)](https://nodejs.org)
 [![Platforms](https://img.shields.io/badge/platform-macOS%20%7C%20Linux%20%7C%20WSL%20%7C%20Windows-0284c7)](#install)
@@ -33,8 +34,9 @@ The full methodology is in [English](docs/METHODOLOGY.md) and [Spanish](docs/MET
 | 💻 **Developer** | Gets back the map of business rules that writing the code no longer gives them |
 
 > 🚧 **Status: version 0.3, in testing.** The installer and the tools have automated tests, run on
-> Windows and Linux. Real-world validation with each agent is still pending. If something breaks,
-> open an issue: that is exactly what we need to know.
+> Windows, Linux and macOS (macOS in GitHub Actions on every push to `main`). Real-world validation
+> with each agent is still pending. If something breaks, open an issue: that is exactly what we
+> need to know.
 
 > 🌐 **Language.** The contract is written in your client's language. The skill's instructions and
 > the installer's messages are in Spanish.

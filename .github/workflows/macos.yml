@@ -12,9 +12,9 @@ jobs:
   macos:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
 
@@ -32,6 +32,7 @@ jobs:
           curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/${{ github.sha }}/scripts/install.sh" | sh -s -- --with-rule
           node ~/.bcdd/pkg/install.mjs doctor
           node ~/.bcdd/pkg/install.mjs uninstall
+          test ! -e .claude/skills/bcdd && test ! -e .agents/skills/bcdd
           test ! -e AGENTS.md || ! grep -q bcdd AGENTS.md
 
       - name: One-command global install
