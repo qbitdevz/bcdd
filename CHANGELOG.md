@@ -1,5 +1,10 @@
 # Cambios
 
+## 0.3.2 — 2026-11-11
+
+- El doctor, corrido desde la carpeta del usuario, muestra la instalación global como "global" (con
+  ruta `~`) en lugar de "proyecto", y no sugiere `--with-rule`, que es por proyecto.
+
 ## 0.3.1 — 2026-11-11
 
 Resultado de una revisión de la documentación y de probar los comandos de instalación contra GitHub.

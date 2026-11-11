@@ -106,18 +106,23 @@ export async function runDoctor({ base = process.cwd(), offline = false, quiet =
   const warn = (m) => { notices++; lines.push(`! ${m}`); };
   const info = (m) => lines.push(`  ${m}`);
   const home = os.homedir();
-  const rel = (p) => (p.startsWith(base + path.sep) ? path.relative(base, p) : p.replace(home, "~"));
+  // Desde la carpeta del usuario, las carpetas "del proyecto" son las globales.
+  const norm = (p) => (process.platform === "win32" ? path.resolve(p).toLowerCase() : path.resolve(p));
+  const atHome = norm(base) === norm(home);
+  const rel = (p) => (!atHome && p.startsWith(base + path.sep) ? path.relative(base, p) : p.replace(home, "~"));
 
   const major = Number(process.versions.node.split(".")[0]);
   if (major < 18) bad(`Node ${process.versions.node}: hace falta 18 o superior.`);
 
   // 1. Instalaciones
   const places = [
-    [path.join(base, ".claude", "skills", "bcdd"), "proyecto"],
-    [path.join(base, ".agents", "skills", "bcdd"), "proyecto"],
+    ...(atHome ? [] : [
+      [path.join(base, ".claude", "skills", "bcdd"), "proyecto"],
+      [path.join(base, ".agents", "skills", "bcdd"), "proyecto"],
+    ]),
     [path.join(home, ".claude", "skills", "bcdd"), "global"],
     [path.join(home, ".agents", "skills", "bcdd"), "global"],
-  ].filter(([p], i, a) => a.findIndex(([q]) => q === p) === i);
+  ];
   const found = [];
   for (const [dir, scope] of places) {
     if (!fs.existsSync(path.join(dir, "SKILL.md"))) continue;
@@ -153,10 +158,10 @@ export async function runDoctor({ base = process.cwd(), offline = false, quiet =
     } else if (st.state === "dañada") bad(`${f}: bloque BCDD dañado (${st.starts} inicio, ${st.ends} cierre). Borrá a mano lo que quede entre los marcadores "bcdd" y reinstalá con --with-rule.`);
   }
   if (wantRule && !anyRule) bad("La regla BCDD se había instalado y ya no está en AGENTS.md ni CLAUDE.md (¿la pisó una actualización de otra herramienta?). Reinstalá con --with-rule.");
-  if (!wantRule && !anyRule && found.length) info("Sin regla en AGENTS.md (opcional): se agrega con --with-rule.");
+  if (!wantRule && !anyRule && found.length && !atHome) info("Sin regla en AGENTS.md (opcional): se agrega con --with-rule.");
 
   // 3. Registro de gentle-ai (solo si el proyecto lo usa: existe .atl/)
-  if (projectScoped.length && fs.existsSync(path.join(base, ".atl"))) {
+  if ((projectScoped.length || atHome) && fs.existsSync(path.join(base, ".atl"))) {
     const r = spawnSync("gentle-ai skill-registry list", { cwd: base, encoding: "utf8", shell: true });
     if (!r.error && r.status === 0) {
       if (/\bbcdd\b/.test(r.stdout)) ok("bcdd figura en el registro de skills de gentle-ai");

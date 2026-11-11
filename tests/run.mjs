@@ -301,6 +301,16 @@ t("doctor: avisa cuando el repo tiene una versión más nueva, y cuando está al
   const c = run(["--dir", d, "doctor", "--offline"]);
   yes(/Chequeo de versión omitido/.test(c.out), c.out); eq(c.code, 0);
 });
+t("doctor desde la carpeta del usuario: la instalación global figura como global", () => {
+  eq(run(["--global"]).code, 0);
+  const r = run(["--dir", HOME, "doctor", "--offline"]);
+  run(["--global", "uninstall"]);
+  eq(r.code, 0, r.out);
+  eq(count(r.out, "(global)"), 2, "etiqueta global\n" + r.out);
+  yes(!/\(proyecto\)/.test(r.out), "la marcó como proyecto\n" + r.out);
+  yes(/~[\\/]\.claude[\\/]skills[\\/]bcdd/.test(r.out), "ruta con ~\n" + r.out);
+  yes(!/Sin regla en AGENTS\.md/.test(r.out), "la regla es por proyecto: no aplica a la instalación global\n" + r.out);
+});
 t("doctor incluido en la skill funciona sin el paquete de instalación", () => {
   const d = proj("standalone");
   run(["--dir", d]);
