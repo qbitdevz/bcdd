@@ -329,7 +329,10 @@ t("doctor incluido en la skill funciona sin el paquete de instalación", () => {
 const hasSh = process.platform !== "win32" && ["sh", "tar", "curl"].every((b) => spawnSync("sh", ["-c", `command -v ${b}`]).status === 0);
 if (hasSh) {
   const tgz = path.join(TMP, "pkg.tar.gz");
-  spawnSync("tar", ["-czf", tgz, "--exclude=.git", "--transform", "s,^[^/]*,bcdd-main,", "-C", path.dirname(ROOT), path.basename(ROOT)]);
+  // Sin --transform (solo GNU tar): macOS trae bsdtar.
+  fs.cpSync(ROOT, path.join(TMP, "bcdd-main"), { recursive: true, filter: (s) => !s.includes(`${path.sep}.git`) });
+  const packed = spawnSync("tar", ["-czf", tgz, "-C", TMP, "bcdd-main"], { encoding: "utf8" });
+  if (packed.status !== 0) throw new Error(`no pude armar ${tgz}: ${packed.stderr}`);
   const boot = (cwd, args = [], env = {}) => {
     const r = spawnSync("sh", ["-s", "--", ...args], { cwd, input: read(path.join(ROOT, "scripts", "install.sh")), encoding: "utf8", env: { ...process.env, HOME, BCDD_REPO: "", BCDD_UPDATE_URL: "", BCDD_TARBALL_URL: pathToFileURL(tgz).href, BCDD_HOME: path.join(TMP, "bhome"), ...env } });
     return { code: r.status, out: (r.stdout ?? "") + (r.stderr ?? "") };
