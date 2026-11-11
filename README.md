@@ -1,4 +1,4 @@
-# BCDD — Business Contract Driven Development
+# 📜 BCDD — Business Contract Driven Development
 
 **Que el cliente, el PM y el desarrollador entiendan lo mismo antes de que el agente escriba código.**
 
@@ -7,48 +7,58 @@ construir y bajo qué reglas. BCDD es una skill para agentes de código (Claude 
 Codex, OpenCode) que toma lo que ya tenés — transcripciones de reuniones, documentos, chats, tus
 propias ideas — y mantiene **un solo archivo** por proyecto, el contrato de negocio:
 
-- el problema, en una frase;
-- lo que el cliente va a notar;
-- **las reglas del negocio**, en lenguaje llano;
-- un diagrama de cómo funciona;
-- lo que queda **fuera de alcance**;
-- los requisitos y su estado;
-- qué cambió desde la reunión anterior.
+- 🎯 el problema, en una frase;
+- 👀 lo que el cliente va a notar;
+- 📏 **las reglas del negocio**, en lenguaje llano;
+- 🔀 un diagrama de cómo funciona;
+- 🚫 lo que queda **fuera de alcance**;
+- 📋 los requisitos y su estado;
+- 📝 qué cambió desde la reunión anterior.
 
 Se lee en dos minutos. Después el agente lo usa como frontera de lo que puede construir.
 La metodología completa está en [`docs/METODOLOGIA.md`](docs/METODOLOGIA.md).
 
-> **Estado: versión 0.3, en prueba.** El instalador y las herramientas tienen pruebas automáticas.
+| Para quién | Qué le resuelve |
+|---|---|
+| 👤 **Cliente** | Confirma en dos minutos que eso es lo que necesita, sin leer documentación técnica |
+| 🧭 **PM / quien dirige** | Ve qué entra, qué no, qué cambió en cada reunión y qué falta decidir |
+| 💻 **Desarrollador** | Recupera el mapa de reglas de negocio que ya no arma escribiendo el código |
+
+> 🚧 **Estado: versión 0.3, en prueba.** El instalador y las herramientas tienen pruebas automáticas.
 > Falta validación en uso real con cada agente y del instalador de Windows. Si algo falla, abrí un
 > issue: es justo lo que hace falta saber.
 
-## Índice
+<a id="indice"></a>
 
-- [Instalar](#instalar)
-- [Usar](#usar)
-- [Comandos](#comandos)
-- [Doctor](#doctor-está-bien-instalada-y-al-día)
-- [Actualizar](#actualizar)
-- [Validar un contrato](#validar-un-contrato)
-- [Página para el cliente](#página-para-el-cliente)
-- [Desinstalar](#desinstalar)
-- [Qué archivos crea](#qué-archivos-crea)
-- [Variables de entorno](#variables-de-entorno)
-- [Cómo convive con ODD, gentle-ai y Engram](#cómo-convive-con-odd-gentle-ai-y-engram)
-- [Contenido del repo](#contenido-del-repo)
-- [Contribuir](#contribuir)
+## 📑 Índice
 
-## Instalar
+- 🚀 [Instalar](#instalar) · ⚙️ [Opciones](#opciones)
+- 💬 [Usar](#usar)
+- 🧰 [Comandos](#comandos)
+- 🩺 [Doctor](#doctor)
+- 🔄 [Actualizar](#actualizar)
+- ✅ [Validar un contrato](#validar)
+- 📄 [Página para el cliente](#pagina-cliente)
+- 🗑️ [Desinstalar](#desinstalar)
+- 📂 [Qué archivos crea](#archivos)
+- 🔧 [Variables de entorno](#variables)
+- 🤝 [Cómo convive con ODD, gentle-ai y Engram](#convivencia)
+- 🗂️ [Contenido del repo](#contenido)
+- 🙌 [Contribuir](#contribuir)
+
+<a id="instalar"></a>
+
+## 🚀 Instalar
 
 Un comando, desde la raíz de tu proyecto:
 
-**macOS / Linux / WSL / Git Bash**
+🍎🐧 **macOS / Linux / WSL / Git Bash**
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/qbitdevz/bcdd/main/scripts/install.sh | sh
 ```
 
-**Windows (PowerShell 5.1 o 7)**
+🪟 **Windows (PowerShell 5.1 o 7)**
 
 ```powershell
 irm https://raw.githubusercontent.com/qbitdevz/bcdd/main/scripts/install.ps1 | iex
@@ -56,11 +66,11 @@ irm https://raw.githubusercontent.com/qbitdevz/bcdd/main/scripts/install.ps1 | i
 
 Descarga el paquete en `~/.bcdd/pkg` y copia la skill a `.claude/skills/bcdd/` y
 `.agents/skills/bcdd/` del proyecto. El detalle de lo que escribe está en
-[Qué archivos crea](#qué-archivos-crea).
+[Qué archivos crea](#archivos).
 
-**Volver a ejecutar el mismo comando actualiza a la última versión.**
+🔁 **Volver a ejecutar el mismo comando actualiza a la última versión.**
 
-**Requisitos**
+**📦 Requisitos**
 
 | Para | Hace falta |
 |---|---|
@@ -71,7 +81,9 @@ Descarga el paquete en `~/.bcdd/pkg` y copia la skill a `.claude/skills/bcdd/` y
 Sin Node se instala igual la skill, en modo básico: solo se copia, con o sin `--global`. Cualquier
 otra opción o comando pide Node.
 
-### Opciones
+<a id="opciones"></a>
+
+### ⚙️ Opciones
 
 Las opciones se pasan así:
 
@@ -103,14 +115,16 @@ $env:BCDD_ARGS = '--with-rule'; irm https://raw.githubusercontent.com/qbitdevz/b
 Si preferís revisar el script antes de ejecutarlo, descargalo, leelo y correlo a mano. También podés
 clonar el repo y usar `node install.mjs` directamente.
 
-## Usar
+<a id="usar"></a>
+
+## 💬 Usar
 
 | Querés… | Hacé |
 |---|---|
 | Empezar un proyecto | Pasale la transcripción o las notas e invocá la skill |
 | Sumarlo a un proyecto en curso | Pedile "adoptá BCDD en este proyecto" |
 | Incorporar una reunión nueva | Pasale la transcripción: muestra el impacto y actualiza |
-| Mandarle el resumen al cliente | Pedile "compartir con el cliente": arma el mensaje y, si querés, una [página lista para enviar o imprimir a PDF](#página-para-el-cliente) |
+| Mandarle el resumen al cliente | Pedile "compartir con el cliente": arma el mensaje y, si querés, una [página lista para enviar o imprimir a PDF](#pagina-cliente) |
 | Registrar una aprobación | Decile quién aprobó; nunca aprueba por su cuenta |
 | Saber qué quedó afuera o qué cambió | Preguntalo; responde desde el contrato |
 | Construir | Aprobá el contrato y pedí la implementación como siempre |
@@ -122,7 +136,9 @@ El contrato se guarda en `bcdd/contrato.md`; lo crea el agente, no el instalador
 y documentos **se quedan donde están**: el contrato solo anota sus rutas. Para adaptar el formato sin
 tocar la skill, dejá tu propia `plantilla.md` junto al contrato.
 
-## Comandos
+<a id="comandos"></a>
+
+## 🧰 Comandos
 
 Una vez instalado, el instalador queda en `~/.bcdd/pkg/install.mjs`. La ruta se escribe distinto
 según la terminal:
@@ -151,7 +167,9 @@ Todos aceptan las [opciones](#opciones) que correspondan. También se pueden eje
 de instalación, sin tener el paquete: `curl … | sh -s -- doctor`, o en PowerShell
 `$env:BCDD_ARGS = 'doctor'; irm … | iex`.
 
-## Doctor: ¿está bien instalada y al día?
+<a id="doctor"></a>
+
+## 🩺 Doctor: ¿está bien instalada y al día?
 
 ```bash
 node ~/.bcdd/pkg/install.mjs doctor
@@ -176,7 +194,9 @@ node .claude/skills/bcdd/scripts/doctor.mjs --json    # resultado en JSON
 
 Sin conexión (o con `--offline`), el chequeo de versión se omite y el resto funciona igual.
 
-## Actualizar
+<a id="actualizar"></a>
+
+## 🔄 Actualizar
 
 Lo más simple es **volver a ejecutar el comando de instalación**: descarga la última versión y
 reinstala.
@@ -190,7 +210,9 @@ la regla si la tenías. Si el paquete es un clon de git, antes hace `git pull`. 
 del comando de instalación), **no descarga nada**: reinstala desde `~/.bcdd/pkg` y te recuerda volver
 a ejecutar `curl`/`irm`. Si modificaste la skill a mano, no la pisa: avisa y pide `--force`.
 
-## Validar un contrato
+<a id="validar"></a>
+
+## ✅ Validar un contrato
 
 ```bash
 node ~/.bcdd/pkg/install.mjs lint bcdd/contrato.md
@@ -202,7 +224,9 @@ inválidos, jerga técnica y secciones faltantes. Advierte cuando el contrato cr
 12 reglas, más de 20 requisitos activos o más de 5 versiones en Cambios. Sale con código 1 si hay
 errores; las advertencias no cortan. El agente lo ejecuta solo al terminar cada pasada.
 
-## Página para el cliente
+<a id="pagina-cliente"></a>
+
+## 📄 Página para el cliente
 
 Cuando le pedís "compartir con el cliente", el agente puede generar una página HTML lista para enviar
 o imprimir a PDF, sin rutas internas ni la sección "Para quien construye". También podés generarla
@@ -216,7 +240,9 @@ node .claude/skills/bcdd/scripts/exportar.mjs bcdd/contrato.md --out entrega/cli
 Por defecto crea `contrato-cliente.html` junto al contrato. El diagrama se dibuja con Mermaid, que la
 página carga de internet; sin conexión se muestra como una lista de pasos.
 
-## Desinstalar
+<a id="desinstalar"></a>
+
+## 🗑️ Desinstalar
 
 ```bash
 node ~/.bcdd/pkg/install.mjs uninstall
@@ -227,7 +253,9 @@ Quita la skill, las carpetas `.claude/skills` y `.agents/skills` si quedan vací
 `AGENTS.md` solo contenía la regla, lo borra). Tus contratos y tus fuentes no se tocan. Para borrar
 también el paquete descargado, eliminá `~/.bcdd`.
 
-## Qué archivos crea
+<a id="archivos"></a>
+
+## 📂 Qué archivos crea
 
 | Dónde | Qué | Cuándo |
 |---|---|---|
@@ -238,7 +266,9 @@ también el paquete descargado, eliminá `~/.bcdd`.
 | Temporal del sistema (`bcdd-backup-…`) | Copia de la skill que modificaste | Solo con `--force` |
 | `bcdd/contrato.md` | El contrato | Lo crea el agente al usar la skill |
 
-## Variables de entorno
+<a id="variables"></a>
+
+## 🔧 Variables de entorno
 
 | Variable | Para qué | Por defecto |
 |---|---|---|
@@ -252,7 +282,9 @@ también el paquete descargado, eliminá `~/.bcdd`.
 Por ejemplo, para instalar otra rama o un tag: `curl -fsSL … | BCDD_REF=<rama-o-tag> sh`, o en
 PowerShell `$env:BCDD_REF = '<rama-o-tag>'; irm … | iex`.
 
-## Cómo convive con ODD, gentle-ai y Engram
+<a id="convivencia"></a>
+
+## 🤝 Cómo convive con ODD, gentle-ai y Engram
 
 - **Va antes, no en lugar de.** BCDD define qué se acordó; ODD (o tu flujo) decide cómo construirlo.
 - **No duplica.** Tareas, pruebas y evidencia siguen en `odd/tasks/`. El contrato no sigue el avance.
@@ -265,7 +297,9 @@ Diseñada según la documentación de gentle-ai 4.x, gentle-shell 4.x y Engram 1
 especificación Agent Skills y a la guía de estilo de skills de gentle-shell. Funciona sin ninguna de
 esas herramientas.
 
-## Contenido del repo
+<a id="contenido"></a>
+
+## 🗂️ Contenido del repo
 
 ```
 skills/bcdd/SKILL.md              reglas y tabla de decisión para el agente
@@ -285,7 +319,9 @@ CHANGELOG.md                      cambios por versión
 package.json · LICENSE            metadatos del paquete y licencia MIT
 ```
 
-## Contribuir
+<a id="contribuir"></a>
+
+## 🙌 Contribuir
 
 Probala en un proyecto real y contá qué pasó: qué entendió bien el agente, qué no, y si tu cliente
 entendió el contrato. [`tests/prueba-manual.md`](tests/prueba-manual.md) tiene un recorrido guiado.
