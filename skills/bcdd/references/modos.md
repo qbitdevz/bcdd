@@ -16,7 +16,13 @@ Leé solo la sección del modo que te toca.
    problema, reglas, pedidos, descartes y preguntas con su puntero, y redactá recién al final desde
    esas notas. No resumas de memoria lo que no leíste.
 6. **Audio o video sin transcribir.** No lo podés leer: pedí la transcripción y anotalo como externo.
-7. **Datos sensibles.** Si las fuentes están en un repo versionado y traen precios, datos personales
+7. **Apuntes propios.** Si son notas del usuario y no palabras del cliente, separá lo que dijo el
+   cliente (fuente: la nota) de lo que agrega el usuario (fuente `equipo`, "A confirmar"). Si no se
+   distingue, preguntá una vez; sin respuesta, tratá lo dudoso como `equipo`.
+8. **Lluvia de ideas con el cliente.** Lo que el cliente aceptó entra como regla o requisito; lo que
+   solo se mencionó como posibilidad queda "A confirmar"; lo que se descartó va a Fuera de alcance.
+   Idear sin el cliente cómo construir algo no es fuente del contrato.
+9. **Datos sensibles.** Si las fuentes están en un repo versionado y traen precios, datos personales
    o información reservada, avisalo en una línea. No toques `.gitignore`.
 
 Cuando dos fuentes se contradicen vale la más reciente y la contradicción se anota en Cambios.

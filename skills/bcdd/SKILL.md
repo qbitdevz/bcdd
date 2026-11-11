@@ -1,10 +1,10 @@
 ---
 name: bcdd
-description: "Trigger: transcripción, acta, notas o chat de una reunión con el cliente; el cliente pidió, cambió o descartó algo; cambio de alcance; reglas de negocio; qué quedó fuera de alcance; resumen para enviar al cliente; adoptar BCDD; meeting transcript, scope change, business rules. Mantiene el contrato de negocio del proyecto: un documento de dos minutos para cliente, PM y desarrollador con el problema, las reglas de negocio, el flujo, lo que queda fuera de alcance, los requisitos y los cambios entre reuniones. Va antes de implementar. No usar para bugfix, refactor ni cambios técnicos sin impacto en lo acordado con el cliente."
+description: "Trigger: transcripción, acta, notas o chat de una reunión con el cliente; apuntes de lo que el cliente va diciendo; lluvia de ideas con el cliente sobre qué necesita; el cliente pidió, cambió o descartó algo; cambio de alcance; reglas de negocio; qué quedó fuera de alcance; resumen para enviar al cliente; adoptar BCDD; meeting transcript, client notes, scope change, business rules. Mantiene el contrato de negocio del proyecto: un documento de dos minutos para cliente, PM y desarrollador con el problema, las reglas de negocio, el flujo, lo que queda fuera de alcance, los requisitos y los cambios entre reuniones. Va antes de implementar. No usar para bugfix, refactor, cambios técnicos sin impacto en lo acordado con el cliente, ni para idear o diseñar cómo construir algo sin el cliente de por medio."
 license: MIT
 metadata:
   author: bcdd-contributors
-  version: "0.3.3"
+  version: "0.3.4"
 ---
 
 # BCDD — Contrato de negocio

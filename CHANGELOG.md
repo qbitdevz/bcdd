@@ -1,5 +1,12 @@
 # Cambios
 
+## 0.3.4 — 2026-11-11
+
+- La skill también se activa con apuntes de lo que el cliente va diciendo y con una lluvia de ideas
+  con el cliente. Lo que agrega quien toma las notas entra como `equipo` y "A confirmar".
+- La descripción excluye idear o diseñar cómo construir algo sin el cliente, para no competir con
+  las skills de brainstorming o diseño.
+
 ## 0.3.3 — 2026-11-11
 
 - `install.sh` funciona en macOS: el `sh` de macOS (bash 3.2) cortaba la instalación con
