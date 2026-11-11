@@ -1,5 +1,13 @@
 # Cambios
 
+## 0.3.3 — 2026-11-11
+
+- `install.sh` funciona en macOS: el `sh` de macOS (bash 3.2) cortaba la instalación con
+  `REF…: unbound variable`, porque leía el `…` del mensaje como parte del nombre de la variable.
+- Las pruebas pasan en macOS (la carpeta temporal es un enlace) y una prueba nueva impide volver a
+  pegar una variable a un carácter no ASCII en `install.sh`.
+- GitHub Actions corre las pruebas y las instalaciones de un comando en macOS en cada push a `main`.
+
 ## 0.3.2 — 2026-11-11
 
 - El doctor, corrido desde la carpeta del usuario, muestra la instalación global como "global" (con

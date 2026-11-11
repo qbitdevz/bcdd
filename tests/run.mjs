@@ -9,7 +9,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const INSTALL = path.join(ROOT, "install.mjs");
 const SKILL = path.join(ROOT, "skills", "bcdd");
-const TMP = fs.mkdtempSync(path.join(os.tmpdir(), "bcdd-test-"));
+// realpath: en macOS la carpeta temporal es un enlace (/var -> /private/var).
+const TMP = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "bcdd-test-")));
 const HOME = path.join(TMP, "home");
 fs.mkdirSync(HOME);
 const VERSION = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8")).version;
@@ -58,6 +59,12 @@ t("SKILL.md: todas las rutas que menciona existen", () => {
   const s = read(path.join(SKILL, "SKILL.md"));
   for (const m of s.matchAll(/`((?:references|assets|scripts)\/[\w.-]+)`/g)) yes(fs.existsSync(path.join(SKILL, m[1])), `no existe ${m[1]}`);
 });
+t("install.sh: ninguna variable va pegada a un carácter no ASCII (el sh de macOS lo lee como parte del nombre)", () => {
+  const bad = fs.readFileSync(path.join(ROOT, "scripts", "install.sh"), "utf8").split("\n")
+    .map((l, i) => [i + 1, l]).filter(([, l]) => /\$[A-Za-z_][A-Za-z0-9_]*[^\x00-\x7F]/.test(l));
+  yes(bad.length === 0, bad.map(([n, l]) => `línea ${n}: ${l}`).join("\n"));
+});
+
 t("Textos en español con tildes (UTF-8)", () => {
   for (const f of ["SKILL.md", "references/modos.md", "references/redaccion.md", "assets/plantilla-contrato.md", "assets/ejemplo-contrato.md", "assets/mensaje-cliente.md"]) {
     const s = read(path.join(SKILL, f));

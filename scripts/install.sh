@@ -25,7 +25,7 @@ command -v tar >/dev/null 2>&1 || die "Hace falta 'tar'."
 TMP="$(mktemp -d 2>/dev/null || mktemp -d -t bcdd)"
 trap 'rm -rf "$TMP"' EXIT INT TERM
 
-say "BCDD: descargando $REF…"
+say "BCDD: descargando ${REF}…"
 if command -v curl >/dev/null 2>&1; then curl -fsSL "$URL" -o "$TMP/bcdd.tar.gz" || die "No pude descargar $URL"
 elif command -v wget >/dev/null 2>&1; then wget -qO "$TMP/bcdd.tar.gz" "$URL" || die "No pude descargar $URL"
 else die "Hace falta 'curl' o 'wget'."; fi
