@@ -180,7 +180,8 @@ can also clone the repository and run `node install.mjs` directly.
 | You want to… | Do this |
 |---|---|
 | Start a project | Give the agent the transcript or notes and invoke the skill |
-| Add it to a project in progress | Ask it to "adopt BCDD in this project" |
+| Add it to a project in progress or already finished | Ask it to "adopt BCDD in this project": it proposes a short baseline and asks you once what already works as agreed ("In force"), instead of turning everything into questions |
+| Test the app or prepare a demo | Ask for a "walkthrough" (recorrido): what the system does today, how to test it, what was built outside the contract, what is missing and what to ask the client |
 | Bring in a new meeting | Give it the transcript: it shows the impact and updates the contract |
 | Take notes while the client talks, or brainstorm with them | Mark what the client said apart from your own ideas, then give it the notes: your ideas stay "To confirm" until the client agrees |
 | Send the summary to the client | Ask it to "share with the client": it drafts the message and, if you want, a [page ready to send or print to PDF](#client-page) |

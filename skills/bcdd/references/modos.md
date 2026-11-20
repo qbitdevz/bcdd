@@ -18,7 +18,8 @@ Leé solo la sección del modo que te toca.
 6. **Audio o video sin transcribir.** No lo podés leer: pedí la transcripción y anotalo como externo.
 7. **Apuntes propios.** Si son notas del usuario y no palabras del cliente, separá lo que dijo el
    cliente (fuente: la nota) de lo que agrega el usuario (fuente `equipo`, "A confirmar"). Si no se
-   distingue, preguntá una vez; sin respuesta, tratá lo dudoso como `equipo`.
+   distingue, preguntá una vez; sin respuesta, tratá lo dudoso como `equipo`. Si el usuario declara
+   que algo ya funciona así y lo da por acordado aunque no haya registro, es "Vigente" (ver Adoptar).
 8. **Lluvia de ideas con el cliente.** Lo que el cliente aceptó entra como regla o requisito; lo que
    solo se mencionó como posibilidad queda "A confirmar"; lo que se descartó va a Fuera de alcance.
    Idear sin el cliente cómo construir algo no es fuente del contrato.
@@ -40,19 +41,41 @@ Proyecto con código o historial y sin contrato. Además de las fuentes, leé el
 visto por quien lo usa), `odd/tasks/*.md` si existen, el historial reciente de git, el README y la
 memoria persistente si está disponible.
 
-- El código dice qué hace el sistema, no qué se acordó. Lo que solo sale del código lleva fuente
-  `código`; si ninguna reunión lo respalda, queda "A confirmar".
-- "A confirmar" con fuente `código` significa: el sistema ya lo hace, pero nadie lo acordó. No hace
-  falta otro estado para decirlo.
+En un proyecto terminado o avanzado casi nada tiene registro: se resolvió antes de grabar, o es
+criterio del equipo tras charlas con el cliente. No lo conviertas en dudas: armá una **línea base**.
+
+1. **Proponer.** Con el código y las fuentes, listá en lenguaje llano las reglas que importan para
+   cambios futuros (hasta unas 12) y las capacidades que ya funcionan, agrupadas (de 3 a 8, no una
+   por pantalla). No es un inventario del sistema.
+2. **Preguntar una sola vez**, con la lista completa: por cada punto, ¿ya funciona así y lo das
+   por acordado, tenés dudas, o no es así? En la misma ronda, ¿qué se conversó y quedó afuera?
+3. **Clasificar con la respuesta:**
+   - Tiene respaldo en material del cliente: "Acordada/Acordado", con su puntero.
+   - El usuario declara que ya funciona así y lo da por acordado: **"Vigente"**, con fuente
+     `equipo · [nombre] · [fecha]` (podés sumar `código · ruta`). Sin pregunta abierta.
+   - El usuario duda, o el código contradice lo que dice: "A confirmar", con pregunta abierta.
+   - Nadie responde: fuente `código` y "A confirmar". Nunca marques "Vigente" por tu cuenta.
+4. **Registrar** en Cambios v1: "Línea base: N reglas y M requisitos vigentes, declarados por
+   [nombre]". Completá el aviso de línea base de la plantilla.
+
+Reglas de la línea base:
+
+- "Vigente" no frena nada ni se reconstruye; cambiarlo es un cambio de alcance y entra por
+  Actualizar. Un requisito "Vigente" no necesita "Listo cuando".
+- Al cliente no se le pregunta punto por punto: Compartir lleva lo vigente en un solo bloque para
+  que avise si algo no es así. Lo que confirme pasa a "Acordada/Acordado" (ver Aprobar).
+- Quien dirige el proyecto puede aprobar la línea base apenas la revisa; no hace falta esperar al
+  cliente para salir de `borrador`.
+- El código dice qué hace el sistema, no qué se acordó: lo que solo sale del código y nadie
+  declaró lleva fuente `código` y queda "A confirmar".
 - **Si el sistema hace algo distinto de lo acordado** (por ejemplo, otro plazo u otro límite), la
   regla se escribe como se acordó, y la diferencia va como pregunta abierta ("se acordó X, el
   sistema hoy hace Y: ¿se corrige?") y como "Diferencia detectada" en Cambios. No elijas vos cuál vale.
 - Escribí en lenguaje llano las reglas que el código ya aplica. Es lo más valioso de adoptar.
 - Marcá "Entregado" únicamente lo que el usuario confirme como entregado o lo que tenga evidencia
   explícita de cierre (por ejemplo, tarea cerrada con verificación en `odd/tasks/`).
-- "Fuera de alcance" no se deduce del código. Si no hay fuente, escribí "Sin exclusiones
-  registradas" y preguntá.
-- Completá el aviso de reconstrucción de la plantilla.
+- "Fuera de alcance" no se deduce del código. Sale de las fuentes o de lo que el usuario responda
+  en la ronda única; si no hay nada, escribí "Sin exclusiones registradas", sin abrir una pregunta.
 - En repos grandes, trabajá por módulo (ver `redaccion.md`, Proyectos grandes).
 
 ## Actualizar
@@ -75,6 +98,27 @@ Respondé desde el contrato citando ID. No modifiques nada. Si preguntan por el 
 construcción, el contrato no lo sabe: miralo en `odd/tasks/` o en el seguimiento del proyecto y
 decí de dónde lo sacaste.
 
+## Recorrido
+
+Para cuando se construyó más rápido de lo que se conversó y hay que probar la aplicación o
+mostrársela al cliente. Compara lo acordado con lo construido. No modifica el contrato ni el código.
+
+1. Leé el contrato completo. Si no hay contrato, pasá primero por Adoptar.
+2. Leé el código visto por quien lo usa (qué puede hacer cada rol y qué reglas aplica),
+   `odd/tasks/*.md` si existen y el historial de git posterior a `actualizado`. En repos grandes,
+   trabajá por módulo y decí cuáles quedaron sin revisar.
+3. Redactá el recorrido con `assets/recorrido.md` y mostralo en la respuesta. No lo guardes como
+   archivo salvo que lo pidan; si lo piden, va como `recorrido-[AAAA-MM-DD].md` junto al contrato.
+   Es una foto de ese día, no un documento que se mantiene.
+4. No ejecutes la aplicación salvo que te lo pidan. Describí lo que el código hace y aclará que no
+   lo verificaste en uso.
+5. Cerrá ofreciendo el paso siguiente: lo que el usuario declare sobre lo construido fuera del
+   contrato entra por Actualizar, como "Vigente" si lo da por acordado o "A confirmar" si hay que
+   consultarlo. No lo decidas vos, y no lo pegues en el contrato dentro de este modo.
+
+Lo construido fuera del contrato no es un error: es lo que el equipo resolvió sobre la marcha y
+todavía nadie anotó. Nombralo sin juzgarlo.
+
 ## Compartir
 
 Genera la versión para el cliente. No cambia el contrato.
@@ -92,7 +136,8 @@ Solo cuando una persona lo dice de forma explícita.
 - Aprobación de quien dirige el proyecto: `estado: aprobado` y
   `aprobado_equipo: [nombre] · [fecha]`.
 - Aprobación del cliente: `aprobado_cliente: [nombre] · [fecha] · [medio: mail, WhatsApp, reunión]`.
-- Con la respuesta del cliente, pasá a "Acordado/Acordada" lo que confirmó y registralo en Cambios.
+- Con la respuesta del cliente, pasá a "Acordado/Acordada" lo que confirmó, incluido lo "Vigente",
+  y registralo en Cambios.
 - Cualquier cambio posterior vuelve todo a `borrador`.
 
 ## Construir

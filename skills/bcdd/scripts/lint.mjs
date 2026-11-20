@@ -12,8 +12,12 @@ const norm = (s) =>
     .toLowerCase()
     .trim();
 
-const RULE_STATES = ["a confirmar", "acordada", "descartada", "to confirm", "agreed", "discarded"];
-const REQ_STATES = ["a confirmar", "acordado", "entregado", "descartado", "to confirm", "agreed", "delivered", "discarded"];
+const RULE_STATES = ["a confirmar", "vigente", "acordada", "descartada", "to confirm", "in force", "agreed", "discarded"];
+const REQ_STATES = ["a confirmar", "vigente", "acordado", "entregado", "descartado", "to confirm", "in force", "agreed", "delivered", "discarded"];
+// Vigente: ya funciona así y una persona del equipo lo declaró; sin registro de reunión.
+const IN_FORCE = ["vigente", "in force"];
+const undeclared = (est, fuente) => IN_FORCE.includes(norm(est)) && /^(codigo|code)\b/.test(norm(fuente)) && !/\b(equipo|team)\b/.test(norm(fuente));
+const UNDECLARED = '"Vigente" necesita quién lo declaró en la fuente (equipo · nombre · fecha), no solo `código`.';
 const CHANGES = ["nuevo", "modificado", "sin cambios", "eliminado", "new", "modified", "unchanged", "removed"];
 const DEAD = ["descartado", "descartada", "discarded"];
 const JARGON =
@@ -100,8 +104,9 @@ export function lintContract(text) {
     if (ruleIds.has(id)) E(`ID de regla repetido: ${id}.`);
     ruleIds.add(id);
     if (empty(texto)) E(`${id}: la regla está vacía.`);
-    if (!RULE_STATES.includes(norm(est))) E(`${id}: estado "${est}" inválido (A confirmar · Acordada · Descartada).`);
+    if (!RULE_STATES.includes(norm(est))) E(`${id}: estado "${est}" inválido (A confirmar · Vigente · Acordada · Descartada).`);
     if (empty(fuente)) E(`${id}: falta la fuente.`);
+    if (undeclared(est, fuente)) W(`${id}: ${UNDECLARED}`);
     if (/a definir|to be defined|tbd/i.test(texto ?? "") && !["a confirmar", "to confirm"].includes(norm(est))) W(`${id}: tiene un valor "a definir" pero no está "A confirmar".`);
   }
   if (rules.length > 12) W(`Hay ${rules.length} reglas; por encima de 12 conviene agrupar o dividir por módulo.`);
@@ -116,13 +121,14 @@ export function lintContract(text) {
     reqIds.add(id);
     if (empty(texto)) E(`${id}: el requisito está vacío.`);
     const e = norm(est);
-    if (!REQ_STATES.includes(e)) E(`${id}: estado "${est}" inválido (A confirmar · Acordado · Entregado · Descartado).`);
+    if (!REQ_STATES.includes(e)) E(`${id}: estado "${est}" inválido (A confirmar · Vigente · Acordado · Entregado · Descartado).`);
     if (!CHANGES.includes(norm(cambio))) E(`${id}: cambio "${cambio}" inválido (Nuevo · Modificado · Sin cambios · Eliminado).`);
     const dead = DEAD.includes(e);
     if (!dead) active++;
-    if (!dead && empty(listo)) E(`${id}: falta "Listo cuando".`);
+    if (!dead && !IN_FORCE.includes(e) && empty(listo)) E(`${id}: falta "Listo cuando".`);
     if (!dead && /funciona bien|validado en demo|works (fine|well)|ok en demo/i.test(listo ?? "")) W(`${id}: "Listo cuando" no es comprobable ("${listo}").`);
     if (empty(fuente)) E(`${id}: falta la fuente.`);
+    if (undeclared(est, fuente)) W(`${id}: ${UNDECLARED}`);
     for (const ref of (reglas ?? "").match(/([A-Z]{2,5}-)?RN-\d+/g) ?? []) {
       usedRules.add(ref);
       if (!ruleIds.has(ref)) E(`${id}: referencia a ${ref}, que no existe en la sección 3.`);

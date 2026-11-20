@@ -26,6 +26,9 @@ REGLAS IMPORTANTES
 QUÉ NO ENTRA EN ESTA ETAPA
 • [Exclusión] ([motivo])
 
+[Solo si hay puntos "Vigente"] YA FUNCIONA ASÍ (avisame si algo no es así)
+• [Regla o capacidad vigente, en una línea]
+
 [Solo si hubo cambios] QUÉ CAMBIÓ DESDE LA ÚLTIMA VEZ
 • [Cambio en una línea]
 
@@ -40,3 +43,4 @@ Reglas:
 - Los pasos de "Cómo funciona" salen del diagrama, en orden, como frases.
 - De las reglas, elegí las 3 a 6 que más afectan al cliente; el resto queda en el documento.
 - Cada pregunta tiene que poder responderse en una línea.
+- Lo "Vigente" va junto en su bloque, nunca como una pregunta por punto.

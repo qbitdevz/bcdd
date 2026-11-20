@@ -65,6 +65,7 @@ Un archivo Markdown, normalmente `bcdd/contrato.md`, con siete partes:
 | Requisito | Regla | Significa |
 |---|---|---|
 | **A confirmar** | **A confirmar** | Propuesto o deducido; falta validarlo con el cliente. No se construye. |
+| **Vigente** | **Vigente** | Ya funciona así y una persona del equipo lo da por acordado, sin registro de reunión. No se reconstruye; cambiarlo es un cambio de alcance. |
 | **Acordado** | **Acordada** | Confirmado. Se puede construir. |
 | **Entregado** | — | Una persona confirmó que está entregado. |
 | **Descartado** | **Descartada** | Se conversó y no va. |
@@ -124,16 +125,30 @@ flowchart TD
 | **Adoptar** | Proyecto ya empezado o terminado. El agente reconstruye el contrato con el material que haya, el código y el historial. |
 | **Actualizar** | Hubo una reunión o un cambio. El agente compara contra el contrato vigente, muestra el impacto y lo actualiza. |
 | **Consultar** | Alguien pregunta qué entra, qué no, o qué cambió. Se responde desde el contrato. |
+| **Recorrido** | Antes de probar la aplicación o de mostrársela al cliente. El agente compara el contrato con lo construido y devuelve qué hace hoy el sistema, cómo probarlo, qué se construyó fuera del contrato, qué falta construir y qué preguntarle al cliente. No modifica nada. |
 | **Compartir** | Se genera la versión para el cliente: un mensaje corto para WhatsApp o mail, y si hace falta una página para enviar o imprimir a PDF. Sin rutas ni detalles internos. |
 | **Aprobar** | Una persona aprueba, o llega la respuesta del cliente. El agente lo registra; nunca aprueba solo. |
 | **Construir** | BCDD no construye: entrega la frontera y las fuentes al flujo de desarrollo. |
 
 ### Al adoptar un proyecto en curso
 
-- El código muestra **qué hace** el sistema, no **qué se acordó**. Lo que no tiene una reunión que lo
-  respalde queda "A confirmar".
+En un proyecto terminado o avanzado casi nada tiene registro: se resolvió antes de grabar, o es
+criterio del equipo tras charlas con el cliente. Tratarlo todo como duda llena el contrato de ruido,
+así que al adoptar se arma una **línea base**:
+
+- El agente propone una lista corta de reglas y de capacidades que ya funcionan, y pregunta una sola
+  vez a quien conoce el proyecto.
+- Lo que esa persona declara que ya funciona así y da por acordado queda **"Vigente"**, con su
+  nombre y la fecha como fuente. No abre preguntas ni frena nada.
+- "A confirmar" queda para la duda real: lo que esa persona no tiene claro, o donde el código
+  contradice lo que dice.
+- El código muestra **qué hace** el sistema, no **qué se acordó**. Lo que solo sale del código y
+  nadie declaró queda "A confirmar"; el agente nunca marca "Vigente" por su cuenta.
+- El cliente recibe lo vigente en un solo bloque, para avisar si algo no es así. Lo que confirma
+  pasa a "Acordado".
 - Lo descartado en reuniones viejas no se puede deducir del código; hay que aportarlo.
-- El contrato avisa arriba que es una reconstrucción y con qué fuentes se hizo.
+- El contrato avisa arriba que es una línea base, quién la declaró y con qué fuentes se hizo.
+- De ahí en adelante, cada reunión genera cambios contra la línea base.
 - El mayor valor es que deja escritas reglas de negocio que hasta ese momento solo vivían en el código.
 
 ## 6. De dónde sale la información
@@ -245,6 +260,9 @@ Tres señales, medibles en dos o tres iteraciones:
 | **Impacto** | La lista de cambios que una reunión nueva produce sobre el contrato |
 | **Adoptar** | Incorporar BCDD a un proyecto que ya estaba en marcha |
 | **Compartir** | Generar la versión del contrato para enviarle al cliente |
+| **Recorrido** | La comparación entre lo acordado y lo construido, con los pasos para probarlo |
+| **Vigente** | Ya funciona así y el equipo lo da por acordado, sin registro de reunión |
+| **Línea base** | El contrato inicial de un proyecto adoptado, declarado por quien lo conoce |
 
 ---
 

@@ -1,5 +1,22 @@
 # Cambios
 
+## 0.4.0 — 2026-11-20
+
+Adoptar BCDD en un proyecto terminado o avanzado ya no llena el contrato de dudas, y hay un modo
+nuevo para cuando se construyó más rápido de lo que se conversó.
+
+- Modo nuevo **Recorrido**, para antes de probar la aplicación o de mostrársela al cliente:
+  compara el contrato con lo construido y devuelve qué hace hoy el sistema, cómo probarlo, qué se
+  construyó fuera del contrato, qué falta, qué difiere de lo acordado y qué preguntarle al
+  cliente. Solo lectura: no cambia el contrato ni el código.
+- Estado nuevo **"Vigente"** para reglas y requisitos: ya funciona así y una persona del equipo lo
+  da por acordado, sin registro de reunión. Lleva como fuente quién lo declaró y cuándo.
+- Adoptar arma una línea base: el agente propone una lista corta, pregunta una sola vez y deja
+  "A confirmar" solo para la duda real. El agente nunca marca "Vigente" por su cuenta.
+- El mensaje para el cliente lleva lo vigente en un solo bloque, en lugar de una pregunta por punto.
+- El lint acepta "Vigente" (sin exigir "Listo cuando" en requisitos) y advierte si la fuente es
+  solo `código`, sin quién lo declaró.
+
 ## 0.3.4 — 2026-11-11
 
 - La skill también se activa con apuntes de lo que el cliente va diciendo y con una lluvia de ideas

@@ -65,6 +65,7 @@ A Markdown file, normally `bcdd/contrato.md`, written in the client's language, 
 | Requirement | Rule | Meaning |
 |---|---|---|
 | **A confirmar** (To be confirmed) | **A confirmar** | Proposed or deduced; still has to be validated with the client. It is not built. |
+| **Vigente** (In force) | **Vigente** (In force) | It already works this way and a person on the team treats it as agreed, with no meeting record. It is not rebuilt; changing it is a scope change. |
 | **Acordado** (Agreed) | **Acordada** (Agreed) | Confirmed. It can be built. |
 | **Entregado** (Delivered) | — | A person confirmed that it is delivered. |
 | **Descartado** (Discarded) | **Descartada** (Discarded) | It was discussed and it is not going in. |
@@ -129,16 +130,31 @@ flowchart TD
 | **Adopt** | Project already started or finished. The agent reconstructs the contract from whatever material exists, the code and the history. |
 | **Update** | There was a meeting or a change. The agent compares against the current contract, shows the impact and updates it. |
 | **Query** | Someone asks what is in, what is out, or what changed. It is answered from the contract. |
+| **Walkthrough** (Recorrido) | Before testing the application or showing it to the client. The agent compares the contract with what was built and returns what the system does today, how to test it, what was built outside the contract, what is still missing and what to ask the client. It changes nothing. |
 | **Share** | The client version is generated: a short message for WhatsApp or email, and if needed a page to send or print to PDF. No paths or internal details. |
 | **Approve** | A person approves, or the client's answer arrives. The agent records it; it never approves on its own. |
 | **Build** | BCDD does not build: it hands the boundary and the sources to the development flow. |
 
 ### When adopting a project already in progress
 
-- The code shows **what the system does**, not **what was agreed**. Anything without a meeting to back
-  it up stays "A confirmar".
+In a finished or advanced project almost nothing has a record: it was settled before anyone recorded a
+meeting, or it is the team's own judgment after talks with the client. Treating all of it as doubt
+fills the contract with noise, so adoption builds a **baseline**:
+
+- The agent proposes a short list of rules and of capabilities that already work, and asks whoever
+  knows the project once.
+- What that person declares already works this way and treats as agreed becomes **"Vigente"** (in
+  force), with their name and the date as the source. It opens no questions and blocks nothing.
+- "A confirmar" is kept for real doubt: what that person is unsure about, or where the code
+  contradicts what they say.
+- The code shows **what the system does**, not **what was agreed**. Anything that comes only from the
+  code and that nobody declared stays "A confirmar"; the agent never marks "Vigente" on its own.
+- The client receives what is in force as a single block, to flag anything that is not so. What they
+  confirm becomes "Acordado".
 - What was discarded in old meetings cannot be deduced from the code; it has to be supplied.
-- The contract warns at the top that it is a reconstruction and which sources it was built from.
+- The contract states at the top that it is a baseline, who declared it and which sources it was built
+  from.
+- From then on, every meeting produces changes against the baseline.
 - The biggest value is that it writes down business rules that until then lived only in the code.
 
 ## 6. Where the information comes from
@@ -251,6 +267,9 @@ Three signals, measurable within two or three iterations:
 | **Impact** | The list of changes a new meeting produces on the contract |
 | **Adopt** | Bringing BCDD into a project that was already underway |
 | **Share** | Generating the version of the contract to send to the client |
+| **Walkthrough** | The comparison between what was agreed and what was built, with the steps to test it |
+| **Vigente** (In force) | It already works this way and the team treats it as agreed, with no meeting record |
+| **Baseline** | The initial contract of an adopted project, declared by whoever knows it |
 
 ---
 

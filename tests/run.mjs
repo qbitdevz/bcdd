@@ -66,7 +66,7 @@ t("install.sh: ninguna variable va pegada a un carácter no ASCII (el sh de macO
 });
 
 t("Textos en español con tildes (UTF-8)", () => {
-  for (const f of ["SKILL.md", "references/modos.md", "references/redaccion.md", "assets/plantilla-contrato.md", "assets/ejemplo-contrato.md", "assets/mensaje-cliente.md"]) {
+  for (const f of ["SKILL.md", "references/modos.md", "references/redaccion.md", "assets/plantilla-contrato.md", "assets/ejemplo-contrato.md", "assets/mensaje-cliente.md", "assets/recorrido.md"]) {
     const s = read(path.join(SKILL, f));
     yes((s.match(/[áéíóúñ]/g) ?? []).length > 5, `${f} parece no tener tildes`);
     yes(!/Ã[¡©­³º±]/.test(s), `${f} tiene caracteres rotos`);
@@ -110,6 +110,23 @@ t("lint advierte jerga técnica y criterios no comprobables", () => {
   yes(r.warnings.some((w) => /no es comprobable/.test(w)), "no advirtió el criterio vago");
 });
 
+t('lint: acepta "Vigente" en reglas y requisitos, sin exigir "Listo cuando"', () => {
+  const s = example
+    .replace("| A confirmar | equipo |\n| RN-07", "| Vigente | equipo · Ana · 2026-04-01 |\n| RN-07")
+    .replace(/(\| REQ-02 \|[^|]+\|) [^|]+ (\|[^|]+\|)[^|]+\|/, "$1 Vigente $2 — |");
+  yes(/\| REQ-02 \|[^|]+\| Vigente \|[^|]+\| — \|/.test(s), "la mutación de prueba no cambió nada");
+  const r = lintContract(s);
+  eq(r.errors.join(" | "), "", "Vigente no tiene que dar errores:");
+  eq(r.warnings.join(" | "), "", "Vigente declarado por una persona no tiene que advertir:");
+  eq(r.summary.activos, lintContract(example).summary.activos, "un requisito Vigente sigue contando como activo:");
+});
+t('lint advierte "Vigente" con fuente solo `código`, sin quién lo declaró', () => {
+  const mut = (fuente) => example.replace("| A confirmar | equipo |\n| RN-07", `| Vigente | ${fuente} |\n| RN-07`);
+  const warned = (fuente) => lintContract(mut(fuente)).warnings.some((w) => /RN-06: "Vigente" necesita quién lo declaró/.test(w));
+  yes(warned("código · src/pedidos.js"), "no advirtió la fuente solo código");
+  yes(!warned("equipo · Ana · 2026-04-01 · código · src/pedidos.js"), "advirtió aunque hay una persona que lo declaró");
+  eq(lintContract(mut("código · src/pedidos.js")).errors.join(" | "), "", "es advertencia, no error:");
+});
 t("lint: los avisos de tamaño saltan justo por encima de 12 reglas, 20 requisitos activos y 5 versiones", () => {
   // El ejemplo tiene 7 reglas, 4 requisitos activos y 2 versiones.
   const rows = (n, f) => Array.from({ length: n }, (_, i) => f(i)).join("\n");

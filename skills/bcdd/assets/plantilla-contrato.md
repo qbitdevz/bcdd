@@ -12,9 +12,9 @@ aprobado_cliente:
 
 # Contrato de negocio — [Proyecto]
 
-<!-- Solo si se reconstruyó o faltan fuentes; si no, borrar este bloque:
-> **Aviso:** reconstruido a partir de [código / carpeta]. Sin registro de reuniones anteriores a [fecha].
-> Lo marcado "A confirmar" todavía no fue validado con el cliente.
+<!-- Solo si se adoptó un proyecto en marcha o faltan fuentes; si no, borrar este bloque:
+> **Aviso:** línea base armada a partir de [código / carpeta] y declarada por [nombre] el [fecha]. Sin registro de reuniones anteriores a [fecha].
+> Lo marcado "Vigente" ya funciona así y el equipo lo da por acordado. Lo marcado "A confirmar" todavía no fue validado.
 -->
 
 ## 1. En dos minutos
@@ -68,6 +68,7 @@ flowchart TD
 ## 7. Para quien construye
 
 - Este contrato define el alcance. No se construye nada de "Fuera de alcance" ni lo que esté "A confirmar" o "Descartado".
+- Lo "Vigente" ya funciona y no se reconstruye. Cambiarlo es un cambio de alcance: entra por BCDD.
 - Antes de construir un requisito, leé la fuente original que indica su columna Fuente: acá está el resumen, allá el detalle.
 - Cada "Listo cuando" y cada regla (RN) asociada al requisito se convierte en una verificación o prueba.
 - Si la fuente original contradice una regla o un "Listo cuando", frená y preguntá antes de seguir.

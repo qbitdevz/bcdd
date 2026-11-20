@@ -30,7 +30,9 @@ Es el centro del contrato.
 - Valor no definido: escribí "a definir", estado "A confirmar" y abrí una pregunta. No lo inventes.
 - Excepciones y casos borde son reglas propias, no una cláusula escondida.
 - Entre 5 y 12 reglas por contrato; si hay más, ver Proyectos grandes.
-- Estados: **A confirmar**, **Acordada**, **Descartada**.
+- Estados: **A confirmar**, **Vigente**, **Acordada**, **Descartada**. "Vigente": ya funciona así
+  y una persona del equipo lo da por acordado, sin registro de reunión. Solo se marca cuando esa
+  persona lo declara, nunca por lo que muestra el código.
 
 | Mal | Bien |
 |---|---|
@@ -41,8 +43,9 @@ Es el centro del contrato.
 ## Sección 4 — Requisitos
 
 - **Requisito:** qué necesita el negocio, no cómo se hace.
-- **Estado:** A confirmar, Acordado, Entregado, Descartado. El contrato no sigue el avance de
-  construcción; "Entregado" se marca solo cuando una persona lo confirma.
+- **Estado:** A confirmar, Vigente, Acordado, Entregado, Descartado. El contrato no sigue el avance
+  de construcción; "Entregado" se marca solo cuando una persona lo confirma. "Vigente" es para lo
+  que ya funcionaba antes de adoptar BCDD: una fila por capacidad, sin "Listo cuando" (va "—").
 - **Cambio:** respecto de la versión anterior — Nuevo, Modificado, Sin cambios, Eliminado.
 - **Listo cuando:** una condición que cualquiera puede comprobar. No sirven "funciona bien" ni
   "validado en demo".
@@ -52,7 +55,8 @@ Es el centro del contrato.
 ## Punteros de fuente
 
 Formato: `archivo · fecha o minuto · «cita breve»`. La cita, de hasta 10 palabras, es opcional y
-sirve para encontrar el pasaje. Otros valores: `equipo` (lo propuso quien dirige o desarrolla),
+sirve para encontrar el pasaje. Otros valores: `equipo` (lo propuso quien dirige o desarrolla; en
+lo "Vigente" lleva quién lo declaró y cuándo: `equipo · Ana · 2026-04-01`),
 `código` (se dedujo del sistema existente; podés agregar la ruta para que el desarrollador lo
 encuentre: `código · src/reservas.js`). La columna Fuente es el único lugar del contrato donde van
 rutas de archivos. Nunca cites pasajes largos.
